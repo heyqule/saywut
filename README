@@ -1,6 +1,7 @@
 WTF is saywut bot?
 A collection of bots which archive posts from various sources, e.g twitter, to a central sqlite table. 
 
+DEMO: saywut section in http://www.heyqule.com
 
 Usage
 -----------------
