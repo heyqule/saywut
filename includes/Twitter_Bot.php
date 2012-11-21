@@ -15,11 +15,11 @@ class Twitter_Bot extends Bot {
     protected $provider_id;
     protected $provider_name;
     
-    public function __construct($id,$account) {
+    public function __construct($id,$config) {
         parent::__construct();
         $this->settings['count'] = 60;
         $this->settings['include_rts'] = 1;
-        $this->settings['account'] = $account;
+        $this->settings['account'] = $config['account'];
         $this->provider_id = $id; 
         
         $this->setUserTimeline($account);

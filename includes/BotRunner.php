@@ -17,8 +17,8 @@ class BotRunner
                 }
 
                 require_once __DIR__.DIRECTORY_SEPARATOR.$botInfo['class'].'.php';
-                $bot = new $botInfo['class']($key,$botInfo['account']);
-                $bot->run();
+                $bot = new $botInfo['class']($key,$botInfo);
+                $bot->run();                
             }
        } catch(Exception $e) {
             file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'error.log',var_dump($e),FILE_APPEND);
