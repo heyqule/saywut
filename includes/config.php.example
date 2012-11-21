@@ -18,4 +18,4 @@ $BOT_CONFIG[1] = array('class'=>'Twitter_Bot','name'=>'Twitter','account'=>'heyq
 
 /** SYSTEM WRITTEN CONFIG **/
 
-define('INSTALLED',true);
+
