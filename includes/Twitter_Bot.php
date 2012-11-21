@@ -22,7 +22,7 @@ class Twitter_Bot extends Bot {
         $this->settings['account'] = $config['account'];
         $this->provider_id = $id; 
         
-        $this->setUserTimeline($account);
+        $this->setUserTimeline($config['account']);
     }
     
     public function setUserTimeline($name = null) {
