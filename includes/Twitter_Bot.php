@@ -33,12 +33,17 @@ class Twitter_Bot extends Bot {
         
         $this->curl_settings[CURLOPT_URL] = $url;
     }
-    
+
+    /*
+     * Data fetching
+     */
     protected function fetch() {
        $rawData = $this->_fetchRawData();
        $this->data = json_decode($rawData);
     }
-    
+    /*
+     * Manipulating and storing data
+     */
     protected function store() {    
         if(is_array($this->data))
         {
@@ -54,5 +59,15 @@ class Twitter_Bot extends Bot {
                 $post->save();
             }
         }
-    }    
+    }
+    
+    /*
+     * Override this function if you need to do more than just fetch and store
+     * 
+     * Example: 
+     *  - fetch multiple sources
+     *
+     */
+    
+     //public function run() {}
 }

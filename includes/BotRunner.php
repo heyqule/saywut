@@ -18,12 +18,14 @@ class BotRunner
 
                 require_once __DIR__.DIRECTORY_SEPARATOR.$botInfo['class'].'.php';
                 $bot = new $botInfo['class']($key,$botInfo);
-                $bot->run();                
-                file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'run.log',$botInfo['class'].' - Success - '.date("Y-m-d H:i:s") ,FILE_APPEND);
+                $bot->run();
+                Helper::log('run.log',$botInfo['class'].' - Success - '.date("Y-m-d H:i:s")."\n");
             }
        } catch(Exception $e) {
-            file_put_contents(__DIR__.DIRECTORY_SEPARATOR.'error.log',date("Y-m-d H:i:s")."\n----------\n".var_dump($e),FILE_APPEND);
+             Helper::log('error.log',date("Y-m-d H:i:s")."\n----------\n".var_dump($e));
        }
-    }   
+    } 
+    
+
 }
 

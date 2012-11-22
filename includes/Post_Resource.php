@@ -39,7 +39,7 @@ class Post_Resource {
         );
         
         return $this->db_res->lastInsertId();
-    }
+    }    
     
     public function delete($id) {
         $this->db_res->exec('DELETE FROM '.POSTS_TBL.' WHERE id = '.$id);

@@ -24,7 +24,7 @@ Bot config register which bot to run when the cron job runs.
 
 class - required, identify the bot class
 name - required, name of the bot
-...  - add as many option as options by your bot
+...  - add as many options as by your bot wants
 
 Example:
 $BOT_CONFIG[2] = array('class'=>'Twitter_Bot','name'=>'Twitter', ...);
