@@ -4,6 +4,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+require_once  __DIR__.DIRECTORY_SEPARATOR.'Helper.php';
 
 class BotRunner 
 {
