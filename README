@@ -5,7 +5,7 @@ DEMO: http://www.heyqule.com/#saywut
 
 Usage
 -----------------
-1. change includes/config.php
+1. set up includes/config.php
 2. run install.php
 3. set up a cron job to run cron.php to get posts
 4. run read.php to read posts as json.
@@ -28,3 +28,9 @@ name - required, name of the bot
 
 Example:
 $BOT_CONFIG[2] = array('class'=>'Twitter_Bot','name'=>'Twitter', ...);
+
+
+Version History
+----------------------
+0.1
+Initial release, includes a twitter user timeline bot
