@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-require_once __DIR__.DIRECTORY_SEPARATOR.'Post_Resource.php';
+require_once ROOT_PATH.DS.'includes'.DS.'Post_Resource.php';
 
 class Post 
 {    
@@ -27,29 +27,17 @@ class Post
     }
     
     public function save() {
-        try {  
-            $loadedData = null;
-            if(isset($this->data['id']))
-            {
-                $loadedData = $this->resource->load($this->data['id']);
-            }
-            if(isset($this->data['provider_id']) && isset($this->data['provider_cid']) )
-            {
-                $loadedData = $this->resource->loadByProvider($this->data['provider_id'],$this->data['provider_cid']);
-            }
-            if($loadedData) {
-                foreach($loadedData as $key => $value)
-                {
-                    if(empty($this->data[$key]))
-                    {
-                        $this->data[$key] = $value;
-                    }
-                }
-            }
+        try { 
             $this->id = $this->resource->replace($this->data);
+            return $this->id;
         }
         catch(Exception $e) {
-            throw new Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
+            Event::write(
+                    $this->provider_id,
+                    Event::E_ERROR,
+                    $e->getMessage().' @ '.$e->getLine().' in '.$e->getFile()
+                 );
+            return false;
         }        
     }
     

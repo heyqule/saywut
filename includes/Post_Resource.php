@@ -4,7 +4,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once __DIR__.DIRECTORY_SEPARATOR.'config.php';
+
+require_once ROOT_PATH.DS.'includes'.DS.'Core.php';
+require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
+
 class Post_Resource {
     protected $db_res;
     
@@ -12,10 +15,10 @@ class Post_Resource {
     
     function __construct() {
         
-        $this->db_res = new PDO('sqlite:'.DB_PATH,DB_USER,DB_PASS);
+        $this->db_res = Core::getDBHandle();
         
-        $insert = "REPLACE INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, tags, time) 
-                    VALUES (:id, :title, :provider_id, :provider_cid, :contents, :tags, :time)";
+        $insert = "REPLACE INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, tags, custom_data, time) 
+                    VALUES (:id, :title, :provider_id, :provider_cid, :contents, :tags, :custom_data, :time)";
         
         $this->upsert_stm = $this->db_res->prepare($insert);         
     }
@@ -34,6 +37,7 @@ class Post_Resource {
                 ':provider_cid' => $data['provider_cid'],
                 ':contents' => $data['contents'],
                 ':tags' => $data['tags'],
+                ':custom_data' => $data['custom_data'],
                 ':time'  => $data['time']
             )                
         );

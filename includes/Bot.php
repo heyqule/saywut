@@ -4,14 +4,23 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once __DIR__.DIRECTORY_SEPARATOR.'Post_Collection.php';
+require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
+
 abstract class Bot {
     protected $curl_settings;
+    
+    protected $interval; //In Minutes
+    
+    protected $hasChanged;
+    
+    protected $provider_id;
     
     function __construct() {
         $this->curl_settings = array();
         $this->curl_settings[CURLOPT_CONNECTTIMEOUT] = 5;
         $this->curl_settings[CURLOPT_RETURNTRANSFER] = 1;
+        $this->interval = 24*60;
+        $this->hasChanged = false;
     }    
     
     protected function _buildQueryString($arr) {
@@ -52,7 +61,23 @@ abstract class Bot {
     abstract protected function store();
     
     public function run() {
-        $this->fetch();
-        $this->store();
+        if($this->runnable())
+        {
+            $this->fetch();
+            $this->store();
+            Event::write($this->provider_id,Event::E_SUCCESS,'');
+        }
+    }
+    
+    public function runnable() {
+        $time = strtotime(Event::getLastestSuccessTime($this->provider_id));
+        if( ($time + $this->interval * 60) < time() )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

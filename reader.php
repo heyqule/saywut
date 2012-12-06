@@ -5,7 +5,8 @@
  * and open the template in the editor.
  */
 
-include 'includes/Post_Collection.php';
+require_once 'config.php';
+require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 $offset = $_REQUEST['offset'];
 $time_from = $_REQUEST['time_from'];
@@ -32,6 +33,14 @@ foreach($posts as $post) {
     $tmp->title = $post->title;
     $tmp->contents = $post->contents;
     $tmp->provider_cid = $post->provider_cid;
+    if(!empty($post->tags))
+    {
+        $tmp->tags = $post->tags;
+    }
+    if(!empty($post->custom_data))
+    {
+        $tmp->custom_data = $post->custom_data;
+    }    
     $tmp->time = $post->time;
     $rc[] = $tmp;
 }

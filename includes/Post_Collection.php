@@ -4,7 +4,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-require_once __DIR__.DIRECTORY_SEPARATOR.'Post.php';
+require_once ROOT_PATH.DS.'includes'.DS.'Post.php';
 
 class Post_Collection extends Post_Resource
 {    
@@ -67,6 +67,7 @@ class Post_Collection extends Post_Resource
             $post->provider_id = $row['provider_id'];
             $post->provider_cid = $row['provider_cid'];
             $post->tags = $row['tags'];
+            $post->custom_data = $row['custom_data'];
             $post->time = $row['time'];
             $rc[$post->id] = $post;
         }
