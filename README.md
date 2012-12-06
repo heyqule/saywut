@@ -26,9 +26,13 @@ Registering new bot
 Bot config register which bot to run.
 
 **class - required. identify the bot class**
+
 **name - required. name of the bot**
+
 interval - optional. the interval between each run.  Default is once a day
+
 ...  - add as many options as by your bot needs
+
 
 **Example:**
 $BOT_CONFIG[2] = array('class'=>'Twitter_Bot','name'=>'Twitter', 'interval'=>15...);
