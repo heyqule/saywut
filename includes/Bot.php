@@ -70,8 +70,8 @@ abstract class Bot {
     }
     
     public function runnable() {
-        $time = strtotime(Event::getLastestSuccessTime($this->provider_id));
-        if( ($time + $this->interval * 60) < time() )
+        $time = strtotime(Event::getLastestSuccessTime($this->provider_id));        
+        if( time() > ($time + $this->interval * 60 - 15) )
         {
             return true;
         }
