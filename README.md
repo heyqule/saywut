@@ -11,7 +11,7 @@ Usage
 3. set up a cron job to run cron.php to get posts
 4. use read.php to read posts as json.
 
-## Read.php Query Strings
+## Reader.php Query Strings
 + offset=0 - page indicator
 
 Add new bot
