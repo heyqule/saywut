@@ -1,6 +1,14 @@
 Version History
 ===============
 
+0.2.1
+-----
++ Added Twitter image handler, tweet image url now stores in custom_data
++ Change logging to use event logger
++ Set runnable time to 1 minute ealier than targeted to prevent task slip to next minute
++ Fixed query string builder
+
+
 0.2
 ---
 + Added cron event logging

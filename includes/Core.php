@@ -15,9 +15,5 @@ final class Core {
             static::$db_res = new PDO('sqlite:'.DB_PATH,DB_USER,DB_PASS);
         }        
         return static::$db_res;
-    }
-    
-    public static function log($filename,$content) {
-        file_put_contents(__DIR__.DIRECTORY_SEPARATOR.$filename, $content, FILE_APPEND);
-    }    
+    }        
 }

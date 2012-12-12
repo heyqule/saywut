@@ -121,9 +121,14 @@ final Class Event {
     
     public static function cleanup() {
         $cleanupInterval = EVENTS_CLEANUP*24*3600;
-        $startTime = time() - $cleanupInterval;
         
-        $dbHandler = Core::getDBHandle();
-        $count = $dbHandler->exec('DELETE FROM '.EVENTS_TBL.' WHERE TIME < '.$startTime);
+        $oldTime = self::getLastestSuccessTime(0);
+        if(!empty($oldTime) && $oldTime + $cleanupInterval < $time())
+        {
+            $startTime = time() - $cleanupInterval;
+            $dbHandler = Core::getDBHandle();
+            $count = $dbHandler->exec('DELETE FROM '.EVENTS_TBL.' WHERE time < '.$startTime);
+            self::write(0,self::E_INFO,'Deleted '.$count.' logs');
+        }
     }
 }

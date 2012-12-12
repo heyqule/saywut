@@ -21,8 +21,6 @@ class BotRunner
                 require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
                 $bot = new $botInfo['class']($key,$botInfo);
                 $bot->run();
-                
-                //Core::log('run.log',$botInfo['class'].' - Success - '.date("Y-m-d H:i:s")."\n");
             }
        } catch(Exception $e) {
              //Core::log('error.log',date("Y-m-d H:i:s")."\n----------\n".var_dump($e));

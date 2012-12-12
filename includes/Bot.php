@@ -26,7 +26,7 @@ abstract class Bot {
     protected function _buildQueryString($arr) {
         $rc = '';
         foreach($arr as $key => $value) {
-            $rc .= urlencode($key).'='.urlencode($value);
+            $rc .= urlencode($key).'='.urlencode($value).'&';
         }
         return $rc;
     }
@@ -71,7 +71,7 @@ abstract class Bot {
     
     public function runnable() {
         $time = strtotime(Event::getLastestSuccessTime($this->provider_id));        
-        if( time() > ($time + $this->interval * 60 - 15) )
+        if( time() >= ($time + $this->interval * 60 - 60) )
         {
             return true;
         }

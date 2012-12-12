@@ -59,7 +59,19 @@ class Twitter_Bot extends Bot {
                 $post->provider_cid = $value->id_str;
                 $post->contents = $value->text;
                 $post->tags = null;
-                $post->custom_data = null;
+                
+                
+                if(isset($value->entities->media[0]->media_url))
+                {                
+                    $custom_data = new stdClass();
+
+                    $custom_data->imageUrl = $value->entities->media[0]->media_url;
+                
+                    $post->custom_data = json_encode($custom_data);
+                }
+                else {
+                   $post->custom_data = null;
+                }
                 $post->time = date(DT_FORMAT, strtotime($value->created_at));                
                 if($post->save())
                 {
