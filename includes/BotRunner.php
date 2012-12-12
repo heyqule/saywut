@@ -23,7 +23,7 @@ class BotRunner
                 $bot->run();
             }
        } catch(Exception $e) {
-             //Core::log('error.log',date("Y-m-d H:i:s")."\n----------\n".var_dump($e));
+            Event::write(0,Event::E_ERROR,$e->getMessage().' @ '.$e->getFile().' L: '.$e->getLine());
        }
     } 
     
