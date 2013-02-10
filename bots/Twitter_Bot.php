@@ -58,16 +58,23 @@ class Twitter_Bot extends Bot {
                 $post->provider_id = $this->provider_id;
                 $post->provider_cid = $value->id_str;
                 $post->contents = $value->text;
-                $post->tags = null;
+                $post->tags = null;               
                 
-                
-                if(isset($value->entities->media[0]->media_url))
+                if(!empty($value->entities->media[0]->media_url))
                 {                
                     $custom_data = new stdClass();
 
                     $custom_data->imageUrl = $value->entities->media[0]->media_url;
                 
                     $post->custom_data = json_encode($custom_data);
+                }
+                else if(!empty($value->entities->urls[0]->expanded_url))
+                {
+                    $custom_data = new stdClass();
+
+                    $custom_data->extUrl = $value->entities->urls[0]->expanded_url;
+                
+                    $post->custom_data = json_encode($custom_data);                    
                 }
                 else {
                    $post->custom_data = null;
