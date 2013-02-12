@@ -26,6 +26,16 @@ class Post
         }            
     }
     
+    public function loadByProdviderId($pid,$pcid) {
+        try {
+            $this->data = $this->resource->loadByProvider($pid, $pcid);
+        }
+        catch(Exception $e)
+        {
+            throw new Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
+        }                
+    }
+    
     public function save() {
         try { 
             $this->id = $this->resource->replace($this->data);
