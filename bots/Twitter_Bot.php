@@ -68,7 +68,7 @@ class Twitter_Bot extends Bot {
                 
                 $targetPost = new Post();
                 $targetPost->loadByProdviderId($post->provider_id, $post->provider_cid);
-                if($targetPost->id && !$this->settings['overwrite']) {
+                if(!empty($targetPost->id) && !$this->settings['overwrite']) {
                    continue; 
                 }
                 

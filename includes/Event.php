@@ -72,7 +72,7 @@ final Class Event {
         }                   
         
         $selectSQL .= '  ORDER BY TIME DESC LIMIT '.$page.','.$limit;
-        
+
         $downstream = $dbHandler->prepare($selectSQL);  
 
         $downstream->execute();    
@@ -92,9 +92,12 @@ final Class Event {
         
         $time = null;
         
-        foreach($rows as $row)
+        if(!empty($rows))
         {
-            $time = $row['time'];
+            foreach($rows as $row)
+            {
+                $time = $row['time'];
+            }
         }
         
         return $time;

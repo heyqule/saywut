@@ -20,7 +20,10 @@ class Post_Resource {
         $insert = "REPLACE INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, tags, custom_data, time) 
                     VALUES (:id, :title, :provider_id, :provider_cid, :contents, :tags, :custom_data, :time)";
         
-        $this->upsert_stm = $this->db_res->prepare($insert);         
+        $this->upsert_stm = $this->db_res->prepare($insert);    
+        
+        $lol = $this->db_res->errorInfo();
+        $lol2 =1;
     }
     
     public function replace($data) {
@@ -29,6 +32,7 @@ class Post_Resource {
         {
            $data['id'] = null; 
         }
+
         $this->upsert_stm->execute(
             array(
                 ':id' => $data['id'], 
@@ -53,9 +57,12 @@ class Post_Resource {
         $result = $this->db_res->query('SELECT * FROM '.POSTS_TBL.' WHERE id = '.$id);           
         
         $rc_row = null;
-        foreach($result as $row) {
-            $rc_row = $row;
-        }       
+        if(!empty($result))
+        {
+            foreach($result as $row) {
+                $rc_row = $row;
+            }       
+        }
         
         return $rc_row;
     } 
@@ -65,9 +72,12 @@ class Post_Resource {
             provider_id = '.$pid.' AND provider_cid = '.$pcid);           
         
         $rc_row = null;
-        foreach($result as $row) {
-            $rc_row = $row;
-        }       
+        if(!empty($result))
+        {
+            foreach($result as $row) {
+                $rc_row = $row;
+            }       
+        }
         
         return $rc_row;        
     }

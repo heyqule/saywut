@@ -18,7 +18,8 @@ class BotRunner
                     continue;
                 }
 
-                require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
+                require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';                
+                
                 $bot = new $botInfo['class']($key,$botInfo);
                 $bot->run();
             }
