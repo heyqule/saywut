@@ -11,7 +11,7 @@ abstract class Bot {
     
     protected $interval; //In Minutes
     
-    protected $hasChanged;
+    protected $numberChanged;   
     
     protected $provider_id;
     
@@ -20,7 +20,7 @@ abstract class Bot {
         $this->curl_settings[CURLOPT_CONNECTTIMEOUT] = 5;
         $this->curl_settings[CURLOPT_RETURNTRANSFER] = 1;
         $this->interval = 24*60;
-        $this->hasChanged = false;
+        $this->numberChanged = 0;
     }    
     
     protected function _buildQueryString($arr) {
@@ -65,13 +65,13 @@ abstract class Bot {
         {
             $this->fetch();
             $this->store();
-            Event::write($this->provider_id,Event::E_SUCCESS,'');
+            Event::write($this->provider_id,Event::E_SUCCESS,'Number of Change - '.$this->numberChanged);
         }
     }
     
     public function runnable() {
-        $time = strtotime(Event::getLastestSuccessTime($this->provider_id));        
-        if( time() >= ($time + $this->interval * 60 - 60) )
+        $time = strtotime(Event::getLatestSuccessTime($this->provider_id));        
+        if( time() > ($time + $this->interval * 60 - 60) )
         {
             return true;
         }

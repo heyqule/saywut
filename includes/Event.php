@@ -85,7 +85,7 @@ final Class Event {
         return $arr;
     }
     
-    public static function getLastestSuccessTime($bot_id) {
+    public static function getLatestSuccessTime($bot_id) {
         $dbHandler = Core::getDBHandle();
         
         $rows = $dbHandler->query('SELECT time FROM '.EVENTS_TBL.' WHERE bot_id = '.$bot_id.' ORDER BY TIME DESC LIMIT 0,1');
@@ -125,7 +125,7 @@ final Class Event {
     public static function cleanup() {
         $cleanupInterval = EVENTS_CLEANUP*24*3600;
         
-        $oldTime = self::getLastestSuccessTime(0);
+        $oldTime = self::getLatestSuccessTime(0);
         if(!empty($oldTime) && $oldTime + $cleanupInterval < $time())
         {
             $startTime = time() - $cleanupInterval;

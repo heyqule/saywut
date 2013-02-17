@@ -1,6 +1,18 @@
 Version History
 ===============
 
+0.3
+-----
++ Twitter_Bot: Added Twitter Card simulation for URL.
++ Twitter_Bot: Tracks first expended_url in url entities
++ Twitter_Bot: Duplicated entry will by skipped by default
+     Can be overwritten with overwrite config
++ Bot: Added Number of Changes to event tracking
++ Core: function to fetch meta tag from HTML
++ Post: function to load by provider content ID
+* Various bug fixes
+
+
 0.2.1
 -----
 + Added Twitter image handler, tweet image url now stores in custom_data

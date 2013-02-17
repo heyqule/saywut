@@ -56,7 +56,7 @@ class Twitter_Bot extends Bot {
     protected function store() {    
         if(is_array($this->data))
         {
-            $numberOfChanges = 0;
+            $this->numberChanged = 0;
             foreach($this->data as $key => $value) {            
                 $post = new Post();
                 $post->id = null;            
@@ -166,13 +166,9 @@ class Twitter_Bot extends Bot {
                 $post->time = date(DT_FORMAT, strtotime($value->created_at));                
                 if($post->save())
                 {
-                    $numberOfChanges++;
+                    $this->numberChanged++;
                 }
-            }
-            
-            if($numberOfChanges) {
-                $this->hasChanged = true;
-            }
+            }            
         }
     }
     
