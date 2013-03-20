@@ -12,7 +12,8 @@ class Post_Collection extends Post_Resource
         parent::__construct();
     }
     
-    public function loadDefault($offset = 0, $limit = 10) {
+    public function loadDefault($offset = 0, $limit = 10) 
+    {
         $sql = "SELECT * FROM ".POSTS_TBL." ORDER BY time DESC LIMIT :offset, :limit";
         $sth = $this->db_res->prepare($sql);
         $sth->execute(
@@ -25,7 +26,8 @@ class Post_Collection extends Post_Resource
         return $this->_fetchRows($rows);        
     }
     
-    public function loadByTime($from,$to,$offset = 0,$limit = 10) {
+    public function loadByTime($from,$to,$offset = 0,$limit = 10) 
+    {
         $sql = "SELECT * FROM ".POSTS_TBL." WHERE time >= :from AND time <= :to ORDER BY time DESC LIMIT :offset, :limit";
         $sth = $this->db_res->prepare($sql);
         $sth->execute(
@@ -41,7 +43,8 @@ class Post_Collection extends Post_Resource
         return $this->_fetchRows($rows);
     }
     
-    public function loadByProvider($id, $offset = 0,$limit = 10) {
+    public function loadByProvider($id, $offset = 0,$limit = 10) 
+    {
         $sql = "SELECT * FROM ".POSTS_TBL." WHERE provider_id = :provider_id ORDER BY time DESC LIMIT :offset, :limit";
         $sth = $this->db_res->prepare($sql);
         $sth->execute(
@@ -54,6 +57,111 @@ class Post_Collection extends Post_Resource
         
         return $this->_fetchRows($rows);         
     } 
+    
+    public function loadByQuery($provider,$query,$from = null,$to = null,$offset = 0, $limit = 10) 
+    {
+        
+        $sql = "SELECT DISTINCT * FROM ".POSTS_TBL." ";
+        $hasWhere = false;       
+        
+        if(!empty($provider)) 
+        {
+            $sql .= "WHERE provider_id = :provider_id ";
+            $hasWhere = true;
+        }
+        
+        $tokens = array();
+        
+        if(!empty($query)) 
+        {
+            $tokens = explode(" ",$query);
+            if(!$hasWhere)
+            {             
+                $sql .= "WHERE ";
+            }
+            else
+            {
+                $sql .= "AND ";
+            }
+            
+            $first = true;
+
+            foreach($tokens as $idx => $val) 
+            {
+                if($first) 
+                {
+                  $sql .= 'contents LIKE :qy'.$idx.' ';   
+                  $first = false;
+                }
+                else
+                {
+                  $sql .= 'OR contents LIKE :qy'.$idx.' ';
+                }
+            }
+        }
+        
+
+        if(!empty($from) || !empty($to))
+        {
+            if(!$hasWhere)
+            {             
+                $sql .= "WHERE ";
+            }
+            else
+            {
+                $sql .= "AND ";
+            }
+
+            if(!empty($from) && !empty($to)) 
+            {
+                $sql .= 'time >= :from AND time <= :to ';
+            }
+            else if(!empty($from)) 
+            {
+                $sql .= 'time >= :from ';
+            } 
+            else if(!empty($to))
+            {
+                $sql .= 'time <= :to ';
+            }        
+        }
+        
+        $sql .= "ORDER BY time DESC LIMIT :offset, :limit";       
+        
+        $sth = $this->db_res->prepare($sql);
+        
+        if(!empty($provider)) {
+            $sth->bindParam(':provider_id',$provider);
+        }
+        
+        
+        if(!empty($tokens)) {
+            foreach($tokens as $idx => $val) {
+                $sth->bindValue(':qy'.$idx,'%'.$val.'%');
+            }
+        }
+        
+        if(!empty($from)) {
+           $sth->bindValue(':from',$from);
+        }
+       
+        if(!empty($to))
+        {
+           $sth->bindValue(':to',$to);   
+        }
+         
+        $sth->bindValue(':offset',$offset*$limit);
+        $sth->bindValue(':limit',$limit);
+                
+        
+        $sth->execute();          
+        
+        $rows = $sth->fetchAll();       
+        
+        //$rows = $this->db_res->query('SELECT * FROM posts WHERE provider_id = 1 AND  contents LIKE \'%UX%\' ORDER BY time DESC LIMIT 0, 10');
+        
+        return $this->_fetchRows($rows);                 
+    }
     
     protected function _fetchRows($rows) {
         

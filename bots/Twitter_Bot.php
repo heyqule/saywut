@@ -110,11 +110,11 @@ class Twitter_Bot extends Bot {
                              $image_url = $metas['og:image'];
                         }
                         
-                        if(strpos($image_url,'://') === false) {
+                        if(!empty($image_url) && strpos($image_url,'://') === false) {
                             $domain = parse_url($custom_data->extUrl);
                             $custom_data->card_photo_url = $domain['scheme'].'://'.$domain['host'].'/'.$image_url;
                         }
-                        else
+                        elseif(!empty($image_url))
                         {
                             $custom_data->card_photo_url = $image_url;
                         }

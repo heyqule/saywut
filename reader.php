@@ -8,20 +8,37 @@
 require_once 'config.php';
 require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
+//Get all providers
+if(!empty($_REQUEST['providers'])) {
+    $rc = array('All Posts');
+    foreach($BOT_CONFIG as $idx => $val)
+    {
+        if($idx > 0)
+        {
+            $rc[$idx] = $val['name'];
+        }
+    }
+    echo json_encode($rc);
+    die;
+}
+
+//Get Post
 $offset = $_REQUEST['offset'];
-$time_from = $_REQUEST['time_from'];
-$time_to = $_REQUEST['time_to'];
-$mood_id = $_REQUEST['provider_id'];
+$from = $_REQUEST['fromDate'];
+$to = $_REQUEST['toDate'];
+$provider = $_REQUEST['provider'];
+$query = $_REQUEST['query'];
 
 if(empty($offset)) {
     $offset = 0;
 }
 
 $post_collector = new Post_Collection();
-$posts = $post_collector->loadDefault($offset);
+$posts = $post_collector->loadByQuery($provider,$query,$from,$to,$offset,10);
 
 if(sizeof($posts) === 0) {
     echo '[:END:]';
+    die;
 }
 //End Controller 
 

@@ -1,6 +1,10 @@
 Version History
 ===============
 
+0.3.1
+-----
++ loadByQuery() in post collection. Uses %phase% to search contents.
+
 0.3
 -----
 + Twitter_Bot: Added Twitter Card simulation for URL.

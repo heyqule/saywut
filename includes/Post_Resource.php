@@ -20,10 +20,7 @@ class Post_Resource {
         $insert = "REPLACE INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, tags, custom_data, time) 
                     VALUES (:id, :title, :provider_id, :provider_cid, :contents, :tags, :custom_data, :time)";
         
-        $this->upsert_stm = $this->db_res->prepare($insert);    
-        
-        $lol = $this->db_res->errorInfo();
-        $lol2 =1;
+        $this->upsert_stm = $this->db_res->prepare($insert);            
     }
     
     public function replace($data) {
