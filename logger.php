@@ -18,15 +18,15 @@ $arr = Event::read();
 <html>
     <head></head>
     <body>
-        <table style="width:800px;">
+        <table style="width:100%;">
 <?php
 foreach($arr as $row) {
     echo '<tr>'.
-         '<td>'.$row['id'].'</td>'.
-         '<td>'.Event::getBotName($BOT_CONFIG, $row['bot_id']).'</td>'.
-         '<td>'.Event::getEventType($row['event_type']).'</td>'.   
-         '<td>'.$row['message'].'</td>'.   
-         '<td>'.$row['time'].'</td>'.
+         '<td style="width:10%">'.$row['id'].'</td>'.
+         '<td style="width:10%">'.Event::getBotName($BOT_CONFIG, $row['bot_id']).'</td>'.
+         '<td style="width:10%">'.Event::getEventType($row['event_type']).'</td>'.
+         '<td style="width:60%">'.$row['message'].'</td>'.
+         '<td style="width:10%">'.$row['time'].'</td>'.
          '</tr>';
 }
 ?>        

@@ -15,7 +15,17 @@ define('DT_FORMAT','Y-m-d H:i:s');
 
 $BOT_CONFIG = array();
 $BOT_CONFIG[0] = array('class'=>null,'name'=>'Unknown');
-$BOT_CONFIG[1] = array('class'=>'Twitter_Bot','name'=>'Twitter','account'=>'heyqule');
+$BOT_CONFIG[1] = array(
+    'class'=>'Twitter_Bot',
+    'name'=>'Twitter',
+    'account'=>'heyqule',
+    'interval'=>0,
+    'overwrite'=>true,
+    'consumerKey'=>'',
+    'consumerSecret'=>'',
+    'oauthKey' => '',
+    'oauthSecret' => ''
+);
 
 /** SYSTEM WRITTEN CONFIG **/
 

@@ -14,6 +14,8 @@ abstract class Bot {
     protected $numberChanged;   
     
     protected $provider_id;
+
+    protected $error;
     
     function __construct() {
         $this->curl_settings = array();
@@ -21,6 +23,7 @@ abstract class Bot {
         $this->curl_settings[CURLOPT_RETURNTRANSFER] = 1;
         $this->interval = 24*60;
         $this->numberChanged = 0;
+        $this->error = false;
     }    
     
     protected function _buildQueryString($arr) {
@@ -32,40 +35,21 @@ abstract class Bot {
     }
             
     protected function _fetchRawData() {
-        
-        try
-        {
-            $curl_handle=curl_init();
-
-            if(!isset($this->curl_settings[CURLOPT_URL]))
-            {
-                throw new Exception('URL is missing');
-            }
-            
-            foreach($this->curl_settings as $key => $value)
-            {
-                curl_setopt($curl_handle,$key,$value);
-            }
-
-            $buffer = curl_exec($curl_handle);
-            curl_close($curl_handle);
-            return $buffer;
-        }
-        catch(Exception $e) 
-        {
-            throw new Exception($e->getMessage());
-        }
+        return Core::runCurl($this->curl_settings);
     }
     
     abstract protected function fetch();
     abstract protected function store();
     
     public function run() {
-        if($this->runnable())
+        if($this->runnable() && !$this->error)
         {
             $this->fetch();
-            $this->store();
-            Event::write($this->provider_id,Event::E_SUCCESS,'Number of Change - '.$this->numberChanged);
+            if(!$this->error)
+            {
+                $this->store();
+                Event::write($this->provider_id,Event::E_SUCCESS,'Number of Change - '.$this->numberChanged);
+            }
         }
     }
     

@@ -16,7 +16,8 @@ final Class Event {
     const E_INFO = 6;
     const E_DEBUG = 7;
         
-    const E_SUCCESS = 1000;   
+    const E_SUCCESS = 1000;
+    const E_CLEANUP = 1001;
     
     private static $event_types;
 
@@ -125,13 +126,31 @@ final Class Event {
     public static function cleanup() {
         $cleanupInterval = EVENTS_CLEANUP*24*3600;
         
-        $oldTime = self::getLatestSuccessTime(0);
-        if(!empty($oldTime) && $oldTime + $cleanupInterval < $time())
+        $oldTime = self::getLastCleanUp();
+        if(!empty($oldTime) && $oldTime + $cleanupInterval < time())
         {
             $startTime = time() - $cleanupInterval;
             $dbHandler = Core::getDBHandle();
             $count = $dbHandler->exec('DELETE FROM '.EVENTS_TBL.' WHERE time < '.$startTime);
-            self::write(0,self::E_INFO,'Deleted '.$count.' logs');
+            self::write(0,self::E_CLEANUP,'Deleted '.$count.' logs');
         }
+    }
+
+    public static function getLastCleanUp() {
+        $dbHandler = Core::getDBHandle();
+
+        $rows = $dbHandler->query('SELECT time FROM '.EVENTS_TBL.' WHERE bot_id = 0 and event_type = '.self::E_CLEANUP.' ORDER BY TIME DESC LIMIT 0,1');
+
+        $time = null;
+
+        if(!empty($rows))
+        {
+            foreach($rows as $row)
+            {
+                $time = $row['time'];
+            }
+        }
+
+        return $time;
     }
 }

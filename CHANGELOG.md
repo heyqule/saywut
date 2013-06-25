@@ -1,6 +1,12 @@
 Version History
 ===============
 
+0.3.2
+-----
+Twitter Bot update to use 1.1
+Added twitteroauth to the library
+Various fixes
+
 0.3.1
 -----
 + loadByQuery() in post collection. Uses %phase% to search contents.

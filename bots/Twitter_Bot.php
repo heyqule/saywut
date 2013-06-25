@@ -6,54 +6,63 @@
  */
 
 require_once ROOT_PATH.DS.'includes'.DS.'Bot.php';
+require_once ROOT_PATH.DS.'bots'.DS.'libs'.DS.'twitteroauth'.DS.'twitteroauth.php';
 
 class Twitter_Bot extends Bot {
     
     protected $settings;
+
+    protected $qurey_settings;
     
     protected $data;    
         
     protected $provider_name;
+
+    protected $connection;
     
     public function __construct($id,$config) {
         parent::__construct();
-        $this->settings['count'] = 60;
-        $this->settings['include_rts'] = 1;
-        $this->settings['include_entities'] = 1;
+        $this->qurey_settings['count'] = 60;
+        $this->qurey_settings['include_rts'] = 1;
+        $this->qurey_settings['include_entities'] = 1;
         $this->settings['account'] = $config['account'];
         $this->settings['overwrite'] = false;
-        
+
         if(!empty($config['overwrite']))
         {
             $this->settings['overwrite'] = $config['overwrite'];
         }
         
         $this->interval = $config['interval'];
-        $this->provider_id = $id; 
-        
-        $this->setUserTimeline($config['account']);       
+        $this->provider_id = $id;
+
+        $this->connection = new TwitterOAuth(
+            $config['consumerKey'],
+            $config['consumerSecret'],
+            $config['oauthKey'],
+            $config['oauthSecret']
+        );
+
+        $this->setUserTimeline($config['account']);
     }
     
     public function setUserTimeline($name = null) {
-        if(!$name) {
-            $name = $this->settings['account'];
-        }
-        $url = 'http://api.twitter.com/1/statuses/user_timeline/'.$name.'.json?'.$this->_buildQueryString($this->settings);               
-        
-        $this->curl_settings[CURLOPT_URL] = $url;
+        $this->qurey_settings['screen_name'] = $name;
     }
 
     /*
      * Data fetching
      */
     protected function fetch() {
-       $rawData = $this->_fetchRawData();
-       $this->data = json_decode($rawData);
+
+       $this->data = $this->connection->get('statuses/user_timeline',$this->qurey_settings);
+
+       $this->checkError($this->data);
     }
     /*
      * Manipulating and storing data
      */
-    protected function store() {    
+    protected function store() {
         if(is_array($this->data))
         {
             $this->numberChanged = 0;
@@ -171,16 +180,39 @@ class Twitter_Bot extends Bot {
             }            
         }
     }
-    
 
-    
+    public function checkError($data) {
+        if(!empty($data->errors)) {
+            $msg = '';
+            foreach($data->errors as $obj)
+            {
+                $msg .= $obj->code.' - '.$obj->message."\n";
+            }
+            $this->error = $msg;
+        }
+
+        if($this->error)
+        {
+            throw new Exception($this->error);
+        }
+    }
+
+    public function convertJSON($buffer) {
+        return json_decode(substr($buffer,strpos($buffer,'{"') ));
+    }
+
     /*
-     * Override this function if you need to do more than just fetch and store
-     * 
-     * Example: 
-     *  - fetch multiple sources
-     *
-     */
+    function __destruct() {
+
+    }
+    */
+/*
+ * Override this function if you need to do more than just fetch and store
+ *
+ * Example:
+ *  - fetch multiple sources
+ *
+ */
     
      //public function run() {}
 }

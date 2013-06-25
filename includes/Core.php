@@ -18,33 +18,72 @@ final class Core {
     }  
     
     public static function getMetaTags($url) {
-        
-        $contents = file_get_contents($url);
-        
-        libxml_use_internal_errors(true);
-                
-        $doc = new DomDocument();
-        $doc->loadHTML($contents);
-        $metas = $doc->getElementsByTagName('meta');
-        
-        $rc = array();
-        
-        foreach ($metas as $meta) {
-            $name = $meta->getAttribute('name');
-            if(empty($name))
+        $rc = null;
+        try
+        {
+            $ch =  curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $contents = curl_exec($ch);
+            curl_close($ch);
+
+            if(!empty($contents))
             {
-                $name = $meta->getAttribute('property');
+                libxml_use_internal_errors(true);
+
+                $doc = new DomDocument();
+                $doc->loadHTML($contents);
+                $metas = $doc->getElementsByTagName('meta');
+
+                $rc = array();
+
+                foreach ($metas as $meta) {
+                    $name = $meta->getAttribute('name');
+                    if(empty($name))
+                    {
+                        $name = $meta->getAttribute('property');
+                    }
+
+                    $content = $meta->getAttribute('content');
+                    if(empty($content)) {
+                        $content = $meta->getAttribute('value');
+                    }
+
+                    if(!empty($name) && !empty($content)) {
+                       $rc[$name] = $content;
+                    }
+                }
             }
-                        
-            $content = $meta->getAttribute('content');
-            if(empty($content)) {
-                $content = $meta->getAttribute('value');
+            return $rc;
+        }
+        catch (Exception $e)
+        {
+            return $rc;
+        }
+    }
+
+    public static function runCurl($url) {
+        try
+        {
+            $curl_handle=curl_init();
+
+            if(!isset($settings[CURLOPT_URL]))
+            {
+                throw new Exception('URL is missing');
             }
 
-            if(!empty($name) && !empty($content)) {
-               $rc[$name] = $content;
+            foreach($settings as $key => $value)
+            {
+                curl_setopt($curl_handle,$key,$value);
             }
+
+            $buffer = curl_exec($curl_handle);
+
+            curl_close($curl_handle);
+            return $buffer;
         }
-        return $rc;
+        catch(Exception $e)
+        {
+            throw new Exception($e->getMessage());
+        }
     }
 }
