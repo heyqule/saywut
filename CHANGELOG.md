@@ -1,6 +1,11 @@
 Version History
 ===============
 
+0.3.3
+-----
+Use $Global for settings
+Add defaults to CURL settings
+
 0.3.2
 -----
 Twitter Bot update to use 1.1

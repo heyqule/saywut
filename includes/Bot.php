@@ -7,8 +7,7 @@
 require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 abstract class Bot {
-    protected $curl_settings;
-    
+
     protected $interval; //In Minutes
     
     protected $numberChanged;   
@@ -18,9 +17,7 @@ abstract class Bot {
     protected $error;
     
     function __construct() {
-        $this->curl_settings = array();
-        $this->curl_settings[CURLOPT_CONNECTTIMEOUT] = 5;
-        $this->curl_settings[CURLOPT_RETURNTRANSFER] = 1;
+
         $this->interval = 24*60;
         $this->numberChanged = 0;
         $this->error = false;

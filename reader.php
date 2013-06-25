@@ -11,7 +11,7 @@ require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 //Get all providers
 if(!empty($_REQUEST['providers'])) {
     $rc = array('All Posts');
-    foreach($BOT_CONFIG as $idx => $val)
+    foreach($GLOBALS['BOT_CONFIG'] as $idx => $val)
     {
         if($idx > 0)
         {
@@ -46,7 +46,7 @@ $rc = array();
 
 foreach($posts as $post) {
     $tmp = new stdClass();
-    $tmp->provider = strtolower($BOT_CONFIG[$post->provider_id]['name']);
+    $tmp->provider = strtolower($GLOBALS['BOT_CONFIG'][$post->provider_id]['name']);
     $tmp->title = $post->title;
     $tmp->contents = $post->contents;
     $tmp->provider_cid = $post->provider_cid;

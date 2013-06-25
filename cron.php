@@ -11,5 +11,5 @@ ini_set('display_errors',1);
 require_once 'config.php';
 require_once ROOT_PATH.DS.'includes'.DS.'BotRunner.php';
 
-BotRunner::init($BOT_CONFIG);
+BotRunner::init($GLOBALS['BOT_CONFIG']);
 ?>

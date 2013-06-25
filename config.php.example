@@ -13,9 +13,9 @@ define('POSTS_TBL','posts');
 
 define('DT_FORMAT','Y-m-d H:i:s');
 
-$BOT_CONFIG = array();
-$BOT_CONFIG[0] = array('class'=>null,'name'=>'Unknown');
-$BOT_CONFIG[1] = array(
+$GLOBALS['BOT_CONFIG'] = array();
+$GLOBALS['BOT_CONFIG'][0] = array('class'=>null,'name'=>'Unknown');
+$GLOBALS['BOT_CONFIG'][1] = array(
     'class'=>'Twitter_Bot',
     'name'=>'Twitter',
     'account'=>'heyqule',

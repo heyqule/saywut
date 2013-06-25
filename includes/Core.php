@@ -21,10 +21,8 @@ final class Core {
         $rc = null;
         try
         {
-            $ch =  curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $contents = curl_exec($ch);
-            curl_close($ch);
+            $settings[CURLOPT_URL] = $url;
+            $contents = self::runCurl($settings);
 
             if(!empty($contents))
             {
@@ -61,9 +59,18 @@ final class Core {
         }
     }
 
-    public static function runCurl($url) {
+    public static function runCurl($settings) {
         try
         {
+
+            if(is_array($settings)) {
+                $settings = $settings + $GLOBALS['CURL_SETTINGS'];
+            }
+            else
+            {
+                throw new Exception('Settings is not an array');
+            }
+
             $curl_handle=curl_init();
 
             if(!isset($settings[CURLOPT_URL]))
@@ -71,10 +78,8 @@ final class Core {
                 throw new Exception('URL is missing');
             }
 
-            foreach($settings as $key => $value)
-            {
-                curl_setopt($curl_handle,$key,$value);
-            }
+
+            curl_setopt_array($curl_handle,$settings);
 
             $buffer = curl_exec($curl_handle);
 

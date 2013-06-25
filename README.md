@@ -35,7 +35,7 @@ interval - optional. the interval between each run.  Default is once a day
 
 
 **Example:**
-$BOT_CONFIG[2] = array('class'=>'Twitter_Bot','name'=>'Twitter', 'interval'=>15...);
+$GLOBALS['BOT_CONFIG'][2] = array('class'=>'Twitter_Bot','name'=>'Twitter', 'interval'=>15...);
 
 
 
