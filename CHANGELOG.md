@@ -1,6 +1,14 @@
 Version History
 ===============
 
+0.4
+-----
+Added Admin Section
+Added Manual Posting support with ACE code editor
+Added Weibo Lib
+Various bug fixes and logic changes
+
+
 0.3.3
 -----
 Use $Global for settings

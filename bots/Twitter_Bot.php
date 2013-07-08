@@ -21,7 +21,7 @@ class Twitter_Bot extends Bot {
     protected $connection;
     
     public function __construct($id,$config) {
-        parent::__construct();
+        parent::__construct($id);
         $this->qurey_settings['count'] = 60;
         $this->qurey_settings['include_rts'] = 1;
         $this->qurey_settings['include_entities'] = 1;
@@ -34,7 +34,6 @@ class Twitter_Bot extends Bot {
         }
         
         $this->interval = $config['interval'];
-        $this->provider_id = $id;
 
         $this->connection = new TwitterOAuth(
             $config['consumerKey'],

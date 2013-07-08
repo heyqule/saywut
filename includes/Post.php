@@ -56,6 +56,7 @@ class Post
             if($this->id)
             {
                 $this->resource->delete($this->id);
+                return true;
             }
         }
         catch(Exception $e) {

@@ -8,6 +8,8 @@ require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 abstract class Bot {
 
+    const NOT_A_CRON = -1;
+
     protected $interval; //In Minutes
     
     protected $numberChanged;   
@@ -15,12 +17,14 @@ abstract class Bot {
     protected $provider_id;
 
     protected $error;
-    
-    function __construct() {
 
+    protected $data;
+    
+    function __construct($id) {
+        $this->provider_id = $id;
         $this->interval = 24*60;
         $this->numberChanged = 0;
-        $this->error = false;
+        $this->error = array();
     }    
     
     protected function _buildQueryString($arr) {
@@ -42,7 +46,7 @@ abstract class Bot {
         if($this->runnable() && !$this->error)
         {
             $this->fetch();
-            if(!$this->error)
+            if(empty($this->error))
             {
                 $this->store();
                 Event::write($this->provider_id,Event::E_SUCCESS,'Number of Change - '.$this->numberChanged);
@@ -52,7 +56,7 @@ abstract class Bot {
     
     public function runnable() {
         $time = strtotime(Event::getLatestSuccessTime($this->provider_id));        
-        if( time() > ($time + $this->interval * 60 - 60) )
+        if( time() > ($time + $this->interval * 60 - 60) && $this->interval != self::NOT_A_CRON)
         {
             return true;
         }
@@ -61,4 +65,10 @@ abstract class Bot {
             return false;
         }
     }
+
+    public function getError() {
+        return $this->error;
+    }
+
+
 }

@@ -12,7 +12,7 @@ final class Core {
     
     public static function getDBHandle() {
         if(static::$db_res == null) {
-            static::$db_res = new PDO('sqlite:'.DB_PATH,DB_USER,DB_PASS);
+            static::$db_res = new PDO('sqlite:'.ROOT_PATH.DS.DB_PATH,DB_USER,DB_PASS);
         }        
         return static::$db_res;
     }  

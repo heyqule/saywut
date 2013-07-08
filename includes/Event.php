@@ -76,7 +76,14 @@ final Class Event {
 
         $downstream = $dbHandler->prepare($selectSQL);  
 
-        $downstream->execute();    
+        if(!empty($exeOptions))
+        {
+            $downstream->execute($exeOptions);
+        }
+        else
+        {
+            $downstream->execute();
+        }
                 
         $arr = array();
         while ($row = $downstream->fetch(PDO::FETCH_ASSOC)) {

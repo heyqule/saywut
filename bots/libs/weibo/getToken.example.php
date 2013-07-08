@@ -10,12 +10,12 @@ ini_set('display_errors',1);
 
 require_once('WeiboOAuthV2.php');
 
-$appKey = '1191803748';
-$appSecret = '7a6a04d39bf8f6834c0e5b117906c56a';
+$appKey = '';
+$appSecret = '';
 
 $connection = new WeiboOAuthV2($appKey,$appSecret);
 
-$redirect_uri = "http://www.heyqule.com/saywut/bots/libs/weibo/getToken.php";
+$redirect_uri = "http://domain/saywut/bots/libs/weibo/getToken.php";
 
 if(!empty($_REQUEST['code']))
 {

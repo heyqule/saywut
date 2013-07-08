@@ -10,74 +10,108 @@
 require_once ROOT_PATH.DS.'bots'.DS.'Raw_Bot.php';
 
 $msg = '';
+$currentPost = null;
 
-if(!empty($_POST['title']) &&
-   !empty($_POST['contents']) &&
-   !empty($_POST['post_type'])
-)
+if(!empty($_GET['id'])) {
+    $currentPost = new Post();
+    $currentPost->load($_GET['id']);
+}
+else
 {
-    $data = array();
-    $temp = new stdClass();
-    $temp->title = $_POST['title'];
-    $temp->contents = $_POST['contents'];
-    if(!empty($_POST['tags']))
-        $temp->tags = $_POST['tags'];
-    if(!empty($_POST['custom_data']))
-        $temp->custom_data = $_POST['custom_data'];
-    $data[] = $temp;
-    $bot = new Raw_Bot($_POST['post_type'],$data,true);
-    if($bot->getError()) {
-        $msg = print_r($bot->getError(),true);
-        Event::write($_POST['post_type'],EVENT::E_SUCCESS,$msg);
+    die('WTF R U DOING HERE BRO?');
+}
+
+if(!empty($currentPost))
+{
+    $post_type = $GLOBALS['BOT_CONFIG'][$currentPost->provider_id]['name'];
+}
+else
+{
+    die("Unable to load post");
+}
+
+if(!empty($_GET['hidden'])) {
+    if($_GET['hidden'] == 1)
+    {
+        $currentPost->hidden = 1;
     }
     else
     {
-        $msg = $_POST['title']." has been saved";
-        Event::write($_POST['post_type'],EVENT::E_ERROR,$msg);
+        $currentPost->hidden = 0;
+    }
+    $rc = '';
+    if($currentPost->save())
+    {
+        $rc = 'success';
+    }
+    die($rc);
+}
+
+if(!empty($_GET['delete']) && $_GET['delete'] == 1) {
+    $rc = $currentPost->delete();
+    if($rc === true)
+    {
+        $rc = 'success';
+    }
+    die($rc);
+}
+
+if(
+   !empty($_POST['contents'])
+)
+{
+
+    $currentPost->contents = $_POST['contents'];
+
+    if(!empty($_POST['title']))
+        $currentPost->title = $_POST['title'];
+
+    if(!empty($_POST['tags']))
+        $currentPost->tags = $_POST['tags'];
+    if(!empty($_POST['custom_data']))
+        $currentPost->custom_data = $_POST['custom_data'];
+    if(!empty($_POST['hidden']))
+        $currentPost->hidden = $_POST['hidden'];
+
+    if($currentPost->save()) {
+        $msg = $currentPost->id." has been updated.";
+        Event::write($currentPost->provider_id,EVENT::E_SUCCESS,$msg);
     }
 }
 
-
 ?>
-<h1>Add New Post</h1>
-<?php echo $msg; ?>
+<h1>Editing Post</h1>
+<div class="msg"><?php echo $msg; ?></div>
 <form action="" method="post">
     <ul class="input_form">
         <li>
             <label>Post Type:</label>
-            <select name="post_type">
-                <?php
-                foreach($GLOBALS['BOT_CONFIG'] as $key => $value ) {
-                    if($value['class'] == 'Raw_Bot') {
-                        echo '<option value="'.$key.'">'.$value['name'].'</option>';
-                    }
-                }
-                ?>
-            </select>
+            <?php echo $post_type.' Last Update:'.$currentPost->update_time.' Hidden:'.$currentPost->hidden; ?>
         </li>
 
         <li>
             <label>Title:</label>
-            <input type="text" name="title" />
+            <input type="text" name="title" value="<?php echo $currentPost->title ?>"/>
         </li>
 
         <li>
             <label>Content:</label>
-            <div id="editor" style="width:75%; height:500px;"></div>
+            <div id="editor" style="width:75%; height:500px;"><?php  echo  htmlspecialchars($currentPost->contents); ?></div>
         </li>
 
         <li>
             <label>Tags:</label>
-            <input type="text" name="tags" />
+            <input type="text" name="tags" value="<?php echo $currentPost->tags; ?>"/>
         </li>
 
         <li>
             <label>Custom Data:</label>
-            <textarea type="text" name="custom_data"></textarea>
+            <div id="custom_data_editor" style="width:75%; height:250px;"><?php  echo $currentPost->custom_data?></div>
         </li>
 
         <li>
             <input type="hidden" id="contents" name="contents"/>
+            <input type="hidden" id="custom_data" name="custom_data"/>
             <input type="submit" value="Submit" />
         </li>
     </ul>
@@ -89,14 +123,29 @@ if(!empty($_POST['title']) &&
 </div>
 
 <script type="text/javascript">
+
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
     editor.getSession().setMode("ace/mode/html");
     var preview = jQuery('.preview');
     var contents = jQuery('#contents');
 
+    contents.val(editor.getValue());
+
     editor.getSession().on('change', function(e) {
         preview.html(editor.getValue());
         contents.val(editor.getValue());
     });
+
+    var custData = ace.edit("custom_data_editor");
+    custData.setTheme("ace/theme/monokai");
+    custData.getSession().setMode("ace/mode/json");
+    var custom_data = jQuery('#custom_data');
+
+    custom_data.val(custData.getValue());
+
+    custData.getSession().on('change', function(e) {
+        custom_data.val(custData.getValue());
+    });
+
 </script>

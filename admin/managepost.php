@@ -7,96 +7,94 @@
  * To change this template use File | Settings | File Templates.
  */
 
-require_once ROOT_PATH.DS.'bots'.DS.'Raw_Bot.php';
+require_once ROOT_PATH.DS.'includes'.DS.'Post.php';
+require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
-$msg = '';
+$collect = new Post_Collection();
 
-if(!empty($_POST['title']) &&
-   !empty($_POST['contents']) &&
-   !empty($_POST['post_type'])
-)
-{
-    $data = array();
-    $temp = new stdClass();
-    $temp->title = $_POST['title'];
-    $temp->contents = $_POST['contents'];
-    if(!empty($_POST['tags']))
-        $temp->tags = $_POST['tags'];
-    if(!empty($_POST['custom_data']))
-        $temp->custom_data = $_POST['custom_data'];
-    $data[] = $temp;
-    $bot = new Raw_Bot($_POST['post_type'],$data,true);
-    if($bot->getError()) {
-        $msg = print_r($bot->getError(),true);
-        Event::write($_POST['post_type'],EVENT::E_SUCCESS,$msg);
-    }
-    else
-    {
-        $msg = $_POST['title']." has been saved";
-        Event::write($_POST['post_type'],EVENT::E_SUCCESS,$msg);
-    }
-}
-
-
+$post = $collect->loadByQuery(0,25);
 ?>
-<h1>Add New Post</h1>
-<?php echo $msg; ?>
-<form action="" method="post">
-    <ul class="input_form">
-        <li>
-            <label>Post Type:</label>
-            <select name="post_type">
-                <?php
-                foreach($GLOBALS['BOT_CONFIG'] as $key => $value ) {
-                    if($value['class'] == 'Raw_Bot') {
-                        echo '<option value="'.$key.'">'.$value['name'].'</option>';
-                    }
-                }
-                ?>
-            </select>
-        </li>
+<table>
+    <tr>
+        <th style="width:10%">ID</th>
+        <th style="width:15%">Info</th>
+        <th style="width:5%">Provider</th>
+        <th style="width:10%">Provider Post ID</th>
+        <th style="width:40%">Contents</th>
+        <th style="width:5%">Is Hidden</th>
+    </tr>
+    <?php foreach($post as $value):?>
+        <tr id="p-<?php echo $value->id; ?>">
+            <td class="col_id"><?php echo $value->id; ?><br />
+                <a href="?l=editpost&id=<?php echo $value->id; ?>">Edit</a> <br />
+                <a href="#" class="hidden" data-id="<?php echo $value->id; ?>"><?php echo ($value->hidden) ? 'Unhide' : 'Hide'; ?></a> <br />
+                <a href="#" class="delete" data-id="<?php echo $value->id; ?>">Delete</a>
+            </td>
+            <td class="col_infos"><?php echo $value->title.'<br />CD: '.$value->time.'<br />UD: '.$value->update_time;  ?></td>
+            <td class="col_type"><?php echo $GLOBALS['BOT_CONFIG'][$value->provider_id]['name']; ?></td>
+            <td class="col_type_cid"><?php echo $value->provider_cid; ?></td>
+            <td class="col_content"><?php echo substr(strip_tags($value->contents),0,140); ?></td>
+            <td class="col_hidden"><?php echo ($value->hidden) ? 'true' : 'false'; ?></td>
 
-        <li>
-            <label>Title:</label>
-            <input type="text" name="title" />
-        </li>
-
-        <li>
-            <label>Content:</label>
-            <div id="editor" style="width:75%; height:500px;"></div>
-        </li>
-
-        <li>
-            <label>Tags:</label>
-            <input type="text" name="tags" />
-        </li>
-
-        <li>
-            <label>Custom Data:</label>
-            <input type="text" name="custom_data" />
-        </li>
-
-        <li>
-            <input type="hidden" id="contents" name="contents"/>
-            <input type="submit" value="Submit" />
-        </li>
-    </ul>
-</form>
-<h4>Preview</h4>
-<hr />
-<div class="preview">
-
-</div>
+        </tr>
+    <?php endforeach; ?>
+</table>
 
 <script type="text/javascript">
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/html");
-    var preview = jQuery('.preview');
-    var contents = jQuery('#contents');
+$('.hidden').click(function() {
+    var jThis = $(this);
+    var hidden = -1;
+    if(jThis.html() == 'Hide') {
+        hidden = 1;
+    }
+    var args = [jThis.data('id'),hidden];
+    requestAction(
+        {'l':'editpost','id':jThis.data('id'),'hidden':hidden},
+        function(args) {
+            var jThis = $('#p-'+args[0]);
+            if(args[1] == 1) {
+                jThis.find('.hidden').html('Unhide');
+                jThis.find('.col_hidden').html('true');
+            }
+            else
+            {
+                jThis.find('.hidden').html('Hide');
+                jThis.find('.col_hidden').html('false');
+            }
+        },
+        args
+    );
+});
 
-    editor.getSession().on('change', function(e) {
-        preview.html(editor.getValue());
-        contents.val(editor.getValue());
-    });
+$('.delete').click(function() {
+    var jThis = $(this);
+    var rowId = jThis.data('id');
+    if(confirm('Are you sure you want to delete Post:'+rowId+'?'))
+    {
+        requestAction(
+            {'l':'editpost','id':rowId,'delete':1},
+            function(rowId) {
+                $('#p-'+rowId).remove();
+            },
+            rowId
+        );
+    }
+});
+
+function requestAction(data,successAction,args) {
+    $.get(
+        'ajax.php',
+        data,
+        function(rcdata) {
+            if(rcdata == 'success')
+            {
+                successAction(args);
+            }
+            else
+            {
+                alert('failed!');
+            }
+        }
+    );
+}
 </script>

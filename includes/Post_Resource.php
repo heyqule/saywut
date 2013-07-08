@@ -17,8 +17,8 @@ class Post_Resource {
         
         $this->db_res = Core::getDBHandle();
         
-        $insert = "REPLACE INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, tags, custom_data, time) 
-                    VALUES (:id, :title, :provider_id, :provider_cid, :contents, :tags, :custom_data, :time)";
+        $insert = "REPLACE INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, tags, custom_data, time, hidden, update_time)
+                    VALUES (:id, :title, :provider_id, :provider_cid, :contents, :tags, :custom_data, :time, :hidden, :update_time)";
         
         $this->upsert_stm = $this->db_res->prepare($insert);            
     }
@@ -30,6 +30,26 @@ class Post_Resource {
            $data['id'] = null; 
         }
 
+        if(empty($data['hidden']))
+        {
+            $data['hidden'] = 0;
+        }
+
+        if(empty($data['provider_cid']))
+        {
+            $data['provider_cid'] = null;
+        }
+
+        if(empty($data['custom_data']))
+        {
+            $data['custom_data'] = null;
+        }
+
+        if(empty($data['tags']))
+        {
+            $data['tags'] = null;
+        }
+
         $this->upsert_stm->execute(
             array(
                 ':id' => $data['id'], 
@@ -39,7 +59,9 @@ class Post_Resource {
                 ':contents' => $data['contents'],
                 ':tags' => $data['tags'],
                 ':custom_data' => $data['custom_data'],
-                ':time'  => $data['time']
+                ':time'  => $data['time'],
+                ':update_time'  => date(DT_FORMAT, time()),
+                ':hidden'       => $data['hidden']
             )                
         );
         

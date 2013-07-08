@@ -13,7 +13,7 @@ if(!empty($_REQUEST['providers'])) {
     $rc = array('All Posts');
     foreach($GLOBALS['BOT_CONFIG'] as $idx => $val)
     {
-        if($idx > 0)
+        if($idx > 0 && empty($GLOBALS['BOT_CONFIG'][$idx]['hidden']))
         {
             $rc[$idx] = $val['name'];
         }
@@ -29,12 +29,54 @@ $to = $_REQUEST['toDate'];
 $provider = $_REQUEST['provider'];
 $query = $_REQUEST['query'];
 
+$showHidden = $_REQUEST['showHidden'];
+
+$onlyHidden = $_REQUEST['onlyHidden'];
+
 if(empty($offset)) {
     $offset = 0;
 }
 
 $post_collector = new Post_Collection();
-$posts = $post_collector->loadByQuery($provider,$query,$from,$to,$offset,10);
+if(!empty($provider))
+{
+    $post_collector->addWhere('provider_id','=',$provider);
+}
+
+if(!empty($query)) {
+    $tokens = explode(" ",$query);
+    $first = true;
+    foreach($tokens as $idx => $val)
+    {
+        if($first)
+        {
+            $post_collector->addWhere('contents','LIKE','%'.$val.'%',null,$idx);
+            $first = false;
+        }
+        else
+        {
+            $post_collector->addWhere('contents','LIKE','%'.$val.'%',true,$idx);
+        }
+    }
+}
+
+if(!empty($from)) {
+    $post_collector->addWhere('from','>=',$from);
+}
+
+if(!empty($to)) {
+    $post_collector->addWhere('to','<=',$to);
+}
+
+if(empty($showHidden)) {
+  $post_collector->addWhere('hidden','=',0);
+}
+elseif(!empty($onlyHidden))
+{
+    $post_collector->addWhere('hidden','=',1);
+}
+
+$posts = $post_collector->loadByQuery($offset,10);
 
 if(sizeof($posts) === 0) {
     echo '[:END:]';

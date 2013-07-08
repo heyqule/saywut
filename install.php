@@ -58,6 +58,28 @@ try
     {
         echo 'Already Upgraded to 0.2 <br />';
     }
+
+    if(!defined('UPGRADE_0.4')) {
+        echo '[V0.3] Updating Post Tables... <br />';
+
+        $file_db->exec("ALTER TABLE posts ADD COLUMN hidden INTEGER");
+        $file_db->exec("ALTER TABLE posts ADD COLUMN update_time INTEGER");
+        $file_db->exec("CREATE INDEX IF NOT EXISTS update_time_index ON posts (update_time DESC)");
+        $file_db->exec("CREATE INDEX IF NOT EXISTS time_index ON posts (time DESC)");
+        $file_db->exec("CREATE INDEX IF NOT EXISTS hidden_index ON posts (hidden DESC)");
+
+
+        echo 'Writing System Config... <br />';
+        $handle = fopen("./config.php", "a");
+        $contents = "\ndefine('UPGRADE_0.4',true);";
+        fwrite($handle, $contents);
+        fclose($handle);
+
+    }
+    else
+    {
+        echo 'Already Upgraded to 0.4 <br />';
+    }
     
     echo 'Done...';
     

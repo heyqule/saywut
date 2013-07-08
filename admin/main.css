@@ -1,0 +1,57 @@
+* {
+    margin:0;
+    padding:0;
+}
+
+html, body
+{
+    height: 100%;
+    min-width:960px;
+}
+
+ul {
+    list-style:none;
+}
+
+.sidebar {
+    float:left;
+    width: calc(15% - 40px);
+    padding:20px;
+    height:100%;
+}
+
+.sidebar li {
+    padding: 10px 0;
+}
+
+.content {
+    float:left;
+    width:calc(85% - 20px);
+    padding-left:20px;
+}
+
+.input_form li {
+    padding:10px 0;
+}
+
+label {
+    width:100px;
+    display:inline-block;
+}
+
+textarea {
+    width:75%;
+    height:200px;
+}
+
+input {
+    width:50%;
+}
+
+input[type="submit"] {
+    width:150px;
+}
+
+table tr td {
+    padding:10px 0;
+}
