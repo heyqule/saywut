@@ -59,15 +59,29 @@ class Raw_Bot extends Bot {
 
                 $post->cid = null;
                 if(!empty($value->cid))
+                {
                     $post->provider_cid = $value->cid;
+                }
 
                 $post->contents = $value->contents;
 
                 $post->tags = null;
                 if(!empty($value->tags))
+                {
                     $post->tags = $value->tags;
+                }
 
                 $post->time = date(DT_FORMAT, time());
+
+                $post->hidden = null;
+                if(!empty($value->hidden))
+                {
+                    $post->hidden = $value->hidden;
+                }
+
+                $post->update_time = date(DT_FORMAT, time());
+
+
                 if($post->save())
                 {
                     $this->numberChanged++;

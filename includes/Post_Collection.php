@@ -30,7 +30,29 @@ class Post_Collection extends Post_Resource
         
         $sql = "SELECT DISTINCT * FROM ".POSTS_TBL." ";
 
+        $sql .= $this->_buildWhere();
+        
+        $sql .= "ORDER BY time DESC LIMIT :offset, :limit";       
+
+        $sth = $this->db_res->prepare($sql);
+
+        foreach($this->_where as $val) {
+            $sth->bindValue(':'.$val->name.$val->name_postfix,$val->value);
+        }
+
+        $sth->bindValue(':offset',$offset);
+        $sth->bindValue(':limit',$limit);
+
+        $sth->execute();          
+        
+        $rows = $sth->fetchAll();
+        
+        return $this->_fetchRows($rows);                 
+    }
+
+    protected function _buildWhere() {
         $isFirst = true;
+        $sql = '';
         foreach($this->_where as $val)
         {
             if($isFirst) {
@@ -49,96 +71,10 @@ class Post_Collection extends Post_Resource
                 }
 
             }
-
         }
-
-        /*
-        $hasWhere = false;
-
-        if(!empty($provider))
-        {
-            $sql .= "WHERE provider_id = :provider_id ";
-            $hasWhere = true;
-        }
-
-        $tokens = array();
-        
-        if(!empty($query)) 
-        {
-            $tokens = explode(" ",$query);
-            if(!$hasWhere)
-            {
-                $sql .= "WHERE ";
-                $hasWhere = true;
-            }
-            else
-            {
-                $sql .= "AND ";
-            }
-
-            $first = true;
-
-            foreach($tokens as $idx => $val) 
-            {
-                if($first) 
-                {
-                  $sql .= 'contents LIKE :qy'.$idx.' ';   
-                  $first = false;
-                }
-                else
-                {
-                  $sql .= 'OR contents LIKE :qy'.$idx.' ';
-                }
-            }
-        }
-        
-
-        if(!empty($from) || !empty($to))
-        {
-            if(!$hasWhere)
-            {
-                $sql .= "WHERE ";
-                $hasWhere = true;
-            }
-            else
-            {
-                $sql .= "AND ";
-            }
-
-            if(!empty($from) && !empty($to)) 
-            {
-                $sql .= 'time >= :from AND time <= :to ';
-            }
-            else if(!empty($from)) 
-            {
-                $sql .= 'time >= :from ';
-            } 
-            else if(!empty($to))
-            {
-                $sql .= 'time <= :to ';
-            }        
-        }
-        */
-        
-        $sql .= "ORDER BY time DESC LIMIT :offset, :limit";       
-
-
-        $sth = $this->db_res->prepare($sql);
-
-        foreach($this->_where as $val) {
-            $sth->bindValue(':'.$val->name.$val->name_postfix,$val->value);
-        }
-
-        $sth->bindValue(':offset',$offset);
-        $sth->bindValue(':limit',$limit);
-
-        $sth->execute();          
-        
-        $rows = $sth->fetchAll();
-        
-        return $this->_fetchRows($rows);                 
+        return $sql;
     }
-    
+
     protected function _fetchRows($rows) {
         
         $rc = array();
@@ -161,17 +97,15 @@ class Post_Collection extends Post_Resource
         return $rc;
     }
 
-    public function getSize($providerId = 0) {
-        if($providerId)
-        {
-            $sql = "SELECT count(*) FROM ".POSTS_TBL." WHERE provider_id = :provider_id";
-            $sth = $this->db_res->prepare($sql);
-            $sth->bindValue(':provider_id',(int) $providerId);
-        }
-        else
-        {
-            $sql = "SELECT count(*) FROM ".POSTS_TBL;
-            $sth = $this->db_res->prepare($sql);
+    public function getSize() {
+
+        $sql = "SELECT count(*) FROM ".POSTS_TBL.' ';
+        $sql .= $this->_buildWhere();
+
+        $sth = $this->db_res->prepare($sql);
+
+        foreach($this->_where as $val) {
+            $sth->bindValue(':'.$val->name.$val->name_postfix,$val->value);
         }
 
         $sth->execute();

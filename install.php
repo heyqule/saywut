@@ -60,9 +60,9 @@ try
     }
 
     if(!defined('UPGRADE_0.4')) {
-        echo '[V0.3] Updating Post Tables... <br />';
+        echo '[V0.4] Updating Post Tables... <br />';
 
-        $file_db->exec("ALTER TABLE posts ADD COLUMN hidden INTEGER");
+        $file_db->exec("ALTER TABLE posts ADD COLUMN hidden INTEGER DEFAULT 0");
         $file_db->exec("ALTER TABLE posts ADD COLUMN update_time INTEGER");
         $file_db->exec("CREATE INDEX IF NOT EXISTS update_time_index ON posts (update_time DESC)");
         $file_db->exec("CREATE INDEX IF NOT EXISTS time_index ON posts (time DESC)");
@@ -80,9 +80,11 @@ try
     {
         echo 'Already Upgraded to 0.4 <br />';
     }
-    
+
     echo 'Done...';
-    
+
+
+
 } catch(Exception $e) {
     echo '<br />ERROR:<br />';
     echo nl2br(print_r($e,true));

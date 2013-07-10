@@ -51,7 +51,7 @@ final Class Event {
         }
     }
         
-    public static function read($bot_id = null,$event_type = array(),$page = 0, $limit = 50) {        
+    public static function read($bot_id = null,$event_type = array(),$page = 0, $limit = 50) {
         $dbHandler = Core::getDBHandle();
 
         $selectSQL = "SELECT * FROM ".EVENTS_TBL;

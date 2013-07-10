@@ -12,7 +12,14 @@ require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 $collect = new Post_Collection();
 
-$post = $collect->loadByQuery(0,25);
+$perpage = 25;
+$offset = 0;
+if(!empty($_GET['offset']))
+{
+    $offset = $_GET['offset'] * $perpage;
+}
+
+$post = $collect->loadByQuery($offset,$perpage);
 ?>
 <table>
     <tr>
@@ -98,3 +105,8 @@ function requestAction(data,successAction,args) {
     );
 }
 </script>
+<style>
+    tr:nth-child(odd) {
+        background: #eee;
+    }
+</style>

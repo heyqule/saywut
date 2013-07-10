@@ -70,8 +70,6 @@ if(
         $currentPost->tags = $_POST['tags'];
     if(!empty($_POST['custom_data']))
         $currentPost->custom_data = $_POST['custom_data'];
-    if(!empty($_POST['hidden']))
-        $currentPost->hidden = $_POST['hidden'];
 
     if($currentPost->save()) {
         $msg = $currentPost->id." has been updated.";

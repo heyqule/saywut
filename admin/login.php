@@ -32,7 +32,7 @@ if($_SESSION['public_key'] == $_POST['public_key']
     <h1>Saywut Admin Login</h1>
     <form action="" method="post">
         <input type="hidden" name="public_key" value="<?php echo $_SESSION['public_key']; ?>" />
-        <input type="text" name="password" />
+        <input type="password" name="password" />
         <input type="submit" />
     </form>
 </body>

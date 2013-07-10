@@ -50,6 +50,11 @@ class Post_Resource {
             $data['tags'] = null;
         }
 
+        if(empty($data['title']))
+        {
+            $data['title'] = null;
+        }
+
         $this->upsert_stm->execute(
             array(
                 ':id' => $data['id'], 

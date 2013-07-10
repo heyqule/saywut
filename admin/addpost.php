@@ -19,25 +19,34 @@ if(!empty($_POST['contents']) &&
     $temp = new stdClass();
     $temp->contents = $_POST['contents'];
     if(!empty($_POST['title']))
-        $currentPost->title = $_POST['title'];
+    {
+        $temp->title = $_POST['title'];
+    }
     if(!empty($_POST['tags']))
+    {
         $temp->tags = $_POST['tags'];
+    }
     if(!empty($_POST['custom_data']))
+    {
         $temp->custom_data = $_POST['custom_data'];
+    }
 
     if(!empty($GLOBALS['BOT_CONFIG'][$_POST['post_type']]['hidden']))
+    {
         $temp->hidden = 1;
+    }
+
 
     $data[] = $temp;
     $bot = new Raw_Bot($_POST['post_type'],$data,true);
     if($bot->getError()) {
         $msg = print_r($bot->getError(),true);
-        Event::write($_POST['post_type'],EVENT::E_SUCCESS,$msg);
+        Event::write($_POST['post_type'],EVENT::E_ERROR,$msg);
     }
     else
     {
         $msg = $_POST['title']." has been saved";
-        Event::write($_POST['post_type'],EVENT::E_ERROR,$msg);
+        Event::write($_POST['post_type'],EVENT::E_SUCCESS,$msg);
     }
 }
 
