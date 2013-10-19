@@ -86,45 +86,50 @@ class Post_Resource {
     }    
     
     public function delete($id) {
-        $this->db_res->exec('DELETE FROM '.POSTS_TBL.' WHERE id = '.$id);
+        $stm = $this->db_res->prepare('DELETE FROM '.POSTS_TBL.' WHERE id = :id');
+        $stm->execute(array(':id'=>$id));
+        $this->db_res->exec(''.$id);
     }
     
     public function load($id) {
-        $result = $this->db_res->query('SELECT * FROM '.POSTS_TBL.' WHERE id = '.$id,PDO::FETCH_ASSOC);
+        $stm = $this->db_res->prepare('SELECT * FROM '.POSTS_TBL.' WHERE id = :id');
+        $stm->execute(array(':id'=>$id));
         
-        $rc_row = $this->_fetchResult($result);
+        $rc_row = $this->_fetchResult($stm->fetch(PDO::FETCH_ASSOC));
         
         return $rc_row;
     } 
     
     public function loadByProvider($pid,$pcid) {
-        $result = $this->db_res->query('SELECT * FROM '.POSTS_TBL.' WHERE 
-            provider_id = '.$pid.' AND provider_cid = '.$pcid,PDO::FETCH_ASSOC);
-        
-        $rc_row = $this->_fetchResult($result);
+        $stm = $this->db_res->prepare('SELECT * FROM '.POSTS_TBL.' WHERE
+            provider_id = :provider_id AND provider_cid = :provider_cid');
+
+        $stm->execute(array(':provider_id'=>$pid,':provider_cid'=>$pcid));
+
+        $rc_row = $this->_fetchResult($stm->fetch(PDO::FETCH_ASSOC));
         
         return $rc_row;        
     }
 
     protected function _fetchResult($result) {
         $rc_row = null;
+
         if(!empty($result))
         {
-            foreach($result as $row) {
-                $rc_row = $row;
-                $meta_result = $this->db_res->query('SELECT * FROM '.META_TBL.' WHERE post_id = '.$row['id'],PDO::FETCH_ASSOC);
-                if(!empty($meta_result))
-                {
-                    foreach($meta_result as $row) {
-                        $post = $rc_row;
-                        if(empty($post['meta'])) {
-                            $post['meta'] = new stdClass();
-                        }
-                        $post['meta']->$row['meta_name'] = $row['meta_value'];
-                    }
+            $rc_row = $result;
+            $meta_result = $this->db_res->query('SELECT * FROM '.META_TBL.' WHERE post_id = '.$rc_row['id'],PDO::FETCH_ASSOC);
+
+            foreach($meta_result as $row) {
+                $post = $rc_row;
+                if(empty($post['meta'])) {
+                    $post['meta'] = new stdClass();
                 }
+                $post['meta']->$row['meta_name'] = $row['meta_value'];
             }
+
         }
+
+
         return $rc_row;
     }
 }

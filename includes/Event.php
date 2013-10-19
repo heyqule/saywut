@@ -39,11 +39,7 @@ final Class Event {
         
         return static::$event_types[$code];
     }
-    
-    public static function getBotName($code) {
 
-    }
-        
     public static function read($bot_id = null,$event_type = array(),$page = 0, $limit = 50) {
         $dbHandler = Core::getDBHandle();
 
@@ -65,7 +61,7 @@ final Class Event {
             $exeOptions = array(':event_type' => $event_type); 
         }                   
         
-        $selectSQL .= ' ORDER BY create_time DESC LIMIT '.$page.','.$limit;
+        $selectSQL .= ' ORDER BY create_time DESC, id DESC LIMIT '.$page.','.$limit;
 
         $downstream = $dbHandler->prepare($selectSQL);  
 
@@ -89,18 +85,18 @@ final Class Event {
     public static function getLatestSuccessTime($bot_id) {
         $dbHandler = Core::getDBHandle();
         
-        $rows = $dbHandler->query('SELECT time FROM '.EVENTS_TBL.' WHERE bot_id = '.$bot_id.' and event_type = '.self::E_SUCCESS.'  ORDER BY TIME DESC LIMIT 0,1');
+        $rows = $dbHandler->query('SELECT create_time FROM '.EVENTS_TBL.' WHERE bot_id = '.$bot_id.' and event_type = '.self::E_SUCCESS.'  ORDER BY create_time DESC LIMIT 0,1');
         
         $time = null;
-        
+
         if(!empty($rows))
         {
             foreach($rows as $row)
             {
-                $time = $row['time'];
+                $time = $row['create_time'];
             }
         }
-        
+
         return $time;
     }
     

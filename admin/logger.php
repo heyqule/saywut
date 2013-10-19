@@ -21,7 +21,7 @@ Core::getBots();
 foreach($arr as $row):
     echo '<tr>'.
          '<td style="width:10%">'.$row['id'].'</td>'.
-         '<td style="width:10%">'.Event::getBotName($GLOBALS['BOT_CONFIG'], $row['bot_id']).'</td>'.
+         '<td style="width:10%">'.Core::getBotName($row['bot_id']).'</td>'.
          '<td style="width:10%">'.Event::getEventType($row['event_type']).'</td>'.
          '<td style="width:60%">'.$row['message'].'</td>'.
          '<td style="width:10%">'.$row['create_time'].'</td>'.

@@ -55,7 +55,7 @@ abstract class Bot {
     }
     
     public function runnable() {
-        $time = strtotime(Event::getLatestSuccessTime($this->provider_id));        
+        $time = strtotime(Event::getLatestSuccessTime($this->provider_id));
         if( time() > ($time + $this->interval * 60 - 60) && $this->interval != self::NOT_A_CRON)
         {
             return true;

@@ -26,25 +26,31 @@ CREATE TABLE IF NOT EXISTS `posts_bots` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
 
+    echo 'posts_bots <br />';
+    print_r($mysql->errorInfo());
+
 $mysql->exec('
 DROP TABLE IF EXISTS `posts`;
 
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` bigint(20) unsigned AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL,
-  `provider_id` int(10) unsigned DEFAULT NULL,
+  `provider_id` int(11) unsigned DEFAULT NULL,
   `provider_cid` varchar(255) DEFAULT NULL,
   `contents` longtext NOT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `POST_EXTERNAL_PROVIDER_INDEX` (`provider_id`,`provider_cid`) COMMENT \'Post from external provider must be unique\',
+  UNIQUE KEY `POST_EXTERNAL_PROVIDER_INDEX` (`provider_id`,`provider_cid`),
   KEY `POST_UPDATE_TIME` (`update_time`),
   KEY `POST_CREATE_TIME` (`create_time`),
   KEY `POST_EXTERNAL_PROVIDER_ID` (`provider_id`),
   CONSTRAINT `POST_BOT` FOREIGN KEY (`provider_id`) REFERENCES `posts_bots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
+
+echo 'posts <br />';
+print_r($mysql->errorInfo());
 
 $mysql->exec('
 DROP TABLE IF EXISTS `posts_meta`;
@@ -60,11 +66,13 @@ CREATE TABLE IF NOT EXISTS `posts_meta` (
   CONSTRAINT `POST_META_POST_ID` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
+    echo 'posts_meta <br />';
+print_r($mysql->errorInfo());
 
 $mysql->exec('
 DROP TABLE IF EXISTS `posts_logs`;
 
-CREATE TABLE IF NOT EXISTS `posts_logs` (
+CREATE TABLE IF NOT EXISTS`posts_logs` (
   `id` bigint(20) unsigned AUTO_INCREMENT,
   `bot_id` int(11) unsigned NOT NULL,
   `event_type` smallint(6) unsigned NOT NULL,
@@ -76,6 +84,8 @@ CREATE TABLE IF NOT EXISTS `posts_logs` (
   CONSTRAINT `LOG_POST_BOT` FOREIGN KEY (`bot_id`) REFERENCES `posts_bots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
+    echo 'posts_logs <br />';
+print_r($mysql->errorInfo());
 
 $mysql->exec('
 SET FOREIGN_KEY_CHECKS=1;

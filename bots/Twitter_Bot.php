@@ -172,7 +172,7 @@ class Twitter_Bot extends Bot {
                 else {
                    $post->meta = null;
                 }
-                $post->time = date(DT_FORMAT, strtotime($value->created_at));                
+
                 if($post->save())
                 {
                     $this->numberChanged++;
