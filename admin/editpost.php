@@ -31,13 +31,19 @@ else
 }
 
 if(!empty($_GET['hidden'])) {
+
+    if(empty($currentPost->meta))
+    {
+        $currentPost->meta = new stdClass();
+    }
+
     if($_GET['hidden'] == 1)
     {
-        $currentPost->hidden = 1;
+        $currentPost->meta->hidden = 1;
     }
     else
     {
-        $currentPost->hidden = 0;
+        $currentPost->meta->hidden = 0;
     }
     $rc = '';
     if($currentPost->save())

@@ -169,9 +169,12 @@ class Twitter_Bot extends Bot {
                                     
                     $post->meta = $custom_data;
                 }
-                else {
-                   $post->meta = null;
+
+                if($post->meta == null)
+                {
+                    $post->meta = new stdClass();
                 }
+                $post->meta->hidden = 0;
 
                 if($post->save())
                 {

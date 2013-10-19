@@ -75,7 +75,8 @@ class Raw_Bot extends Bot {
                 $post->hidden = null;
                 if(!empty($value->hidden))
                 {
-                    $post->hidden = $value->hidden;
+                    $post->meta = new stdClass();
+                    $post->meta->hidden = $value->hidden;
                 }
 
                 $post->update_time = date(DT_FORMAT, time());

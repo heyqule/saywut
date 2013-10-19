@@ -77,7 +77,6 @@ elseif(!empty($onlyHidden))
     $post_collector->addMetaWhere('hidden','=',1);
 }
 
-
 $posts = $post_collector->loadByQuery($offset*10,10);
 
 if(sizeof($posts) === 0) {
