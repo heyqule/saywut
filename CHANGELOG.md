@@ -5,7 +5,7 @@ Version History
 -----
 Switch back to MySQL
 Various changes and fixes
------
+
 
 0.4
 -----

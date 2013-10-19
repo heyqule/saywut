@@ -25,7 +25,6 @@ if(empty($_SESSION['is_logged'])) {
 
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
     <script type="text/javascript" src="plugins.js"></script>
-    <script type="text/javascript" src="ace_editor/src-noconflict/ace.js"></script>
 </head>
 <body>
 <ul class="sidebar">

@@ -50,7 +50,6 @@ if(!empty($_POST['contents']) &&
     else
     {
         $msg = $_POST['title']." has been saved";
-        Event::write($_POST['post_type'],EVENT::E_SUCCESS,$msg);
     }
 }
 
@@ -77,16 +76,13 @@ if(!empty($_POST['contents']) &&
             <label>Title:</label>
             <input type="text" name="title" />
         </li>
-
         <li>
             <label>Content:</label>
-            <div id="editor" style="width:75%; height:500px;"></div>
+            <textarea id="contents" style="width:75%; height:500px;" name="contents"></textarea>
         </li>
 
-
         <li>
-            <input type="hidden" id="contents" name="contents"/>
-            <input type="hidden" id="custom_data" name="custom_data"/>
+
             <input type="submit" value="Submit" />
         </li>
     </ul>
@@ -96,16 +92,3 @@ if(!empty($_POST['contents']) &&
 <div class="preview">
 
 </div>
-
-<script type="text/javascript">
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/html");
-    var preview = jQuery('.preview');
-    var contents = jQuery('#contents');
-
-    editor.getSession().on('change', function(e) {
-        preview.html(editor.getValue());
-        contents.val(editor.getValue());
-    });
-</script>

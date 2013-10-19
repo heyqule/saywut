@@ -66,9 +66,10 @@ if(
     if(!empty($_POST['title']))
         $currentPost->title = $_POST['title'];
 
+
+
     if($currentPost->save()) {
         $msg = $currentPost->id." has been updated.";
-        Event::write($currentPost->provider_id,EVENT::E_SUCCESS,$msg);
     }
 }
 
@@ -89,12 +90,10 @@ if(
 
         <li>
             <label>Content:</label>
-            <div id="editor" style="width:75%; height:500px;"><?php  echo  htmlspecialchars($currentPost->contents); ?></div>
+            <textarea id="contents" style="width:75%; height:500px;" name="contents"><?php  echo  htmlspecialchars($currentPost->contents); ?></textarea>
         </li>
 
-
         <li>
-            <input type="hidden" id="contents" name="contents"/>
 
             <input type="submit" value="Submit" />
         </li>
@@ -105,20 +104,3 @@ if(
 <div class="preview">
 
 </div>
-
-<script type="text/javascript">
-
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/html");
-    var preview = jQuery('.preview');
-    var contents = jQuery('#contents');
-
-    contents.val(editor.getValue());
-
-    editor.getSession().on('change', function(e) {
-        preview.html(editor.getValue());
-        contents.val(editor.getValue());
-    });
-
-</script>

@@ -65,7 +65,7 @@ final Class Event {
             $exeOptions = array(':event_type' => $event_type); 
         }                   
         
-        $selectSQL .= '  ORDER BY TIME DESC LIMIT '.$page.','.$limit;
+        $selectSQL .= ' ORDER BY create_time DESC LIMIT '.$page.','.$limit;
 
         $downstream = $dbHandler->prepare($selectSQL);  
 
@@ -107,20 +107,18 @@ final Class Event {
     public static function write($botId,$eventId,$eventMsg) {
         $dbHandler = Core::getDBHandle();
 
-        $insertSQL = "INSERT INTO ".EVENTS_TBL." (id, bot_id, event_type, message , time)
-                    VALUES (:id, :bot_id, :event_type, :message, :time)";
+        $insertSQL = 'INSERT INTO '.EVENTS_TBL.' (bot_id, event_type, message , create_time) VALUES (:bot_id, :event_type, :message, :create_time)';
 
         $upstream = $dbHandler->prepare($insertSQL);  
 
         $upstream->execute(
             array(
-                ':id' => null, 
                 ':bot_id' => $botId, 
                 ':event_type' => $eventId,
                 ':message' => $eventMsg,
-                ':time'  => date(DT_FORMAT)
+                ':create_time'  => date(DT_FORMAT)
             )                
-        );    
+        );
     } 
     
     public static function cleanup() {

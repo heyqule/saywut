@@ -24,7 +24,7 @@ foreach($arr as $row):
          '<td style="width:10%">'.Event::getBotName($GLOBALS['BOT_CONFIG'], $row['bot_id']).'</td>'.
          '<td style="width:10%">'.Event::getEventType($row['event_type']).'</td>'.
          '<td style="width:60%">'.$row['message'].'</td>'.
-         '<td style="width:10%">'.$row['time'].'</td>'.
+         '<td style="width:10%">'.$row['create_time'].'</td>'.
          '</tr>';
 endforeach;
 ?>        
