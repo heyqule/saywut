@@ -10,7 +10,7 @@ require_once ROOT_PATH.DS.'includes'.DS.'Post_Resource.php';
 class Post 
 {    
     
-    protected $data;
+    public $data;
     protected $resource;
     
     function __construct() {
@@ -37,8 +37,13 @@ class Post
     }
     
     public function save() {
-        try { 
-            $this->id = $this->resource->replace($this->data);
+        try {
+            $this->id = $this->resource->save($this->data);
+            Event::write(
+                $this->provider_id,
+                Event::E_SUCCESS,
+                'Saved:'.$this->id.' - '.$this->provider_id.' - '.$this->provider_cid
+            );
             return $this->id;
         }
         catch(Exception $e) {
@@ -56,6 +61,11 @@ class Post
             if($this->id)
             {
                 $this->resource->delete($this->id);
+                Event::write(
+                    $this->provider_id,
+                    Event::E_SUCCESS,
+                    'Deleted'.$this->id.' - '.$this->provider_id.' - '.$this->provider_cid
+                );
                 return true;
             }
         }
@@ -87,5 +97,13 @@ class Post
     public function __unset($name)
     {
         unset($this->data[$name]);
-    }    
+    }
+
+    public function getData() {
+        return $this->data;
+    }
+
+    public function setData($values) {
+        $this->data = $values;
+    }
 }

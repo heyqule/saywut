@@ -18,9 +18,9 @@ class BotRunner
                     continue;
                 }
 
-                require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';                
-                
-                $bot = new $botInfo['class']($key,$botInfo);
+                require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
+
+                $bot = new $botInfo['class'](Core::getBotKey($botInfo),$botInfo);
                 $bot->run();
             }
        } catch(Exception $e) {

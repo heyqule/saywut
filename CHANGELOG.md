@@ -1,6 +1,12 @@
 Version History
 ===============
 
+0.5
+-----
+Switch back to MySQL
+Various changes and fixes
+-----
+
 0.4
 -----
 Added Admin Section

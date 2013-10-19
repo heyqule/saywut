@@ -9,13 +9,60 @@ require_once ROOT_PATH.DS.'config.php';
 final class Core {        
     
     protected static $db_res;
+    protected static $bot_types = array();
     
     public static function getDBHandle() {
         if(static::$db_res == null) {
-            static::$db_res = new PDO('sqlite:'.ROOT_PATH.DS.DB_PATH,DB_USER,DB_PASS);
+            static::$db_res = new PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';',
+                MYSQL_DB_USER,MYSQL_DB_PASS);
         }        
         return static::$db_res;
-    }  
+    }
+
+
+    public static function getBotKey($botInfo) {
+        self::getDBHandle();
+        $id = md5($botInfo['class'].$botInfo['name']);
+
+        self::getBots();
+
+        if(empty(static::$bot_types[$id])) {
+            $stm = static::$db_res->prepare('INSERT INTO '.BOTS_TBL.' (class, name) VALUES (:class, :name);');
+            if($stm->execute(
+                array(':class'=>$botInfo['class'],':name'=>$botInfo['name'])
+            ))
+            {
+                return static::$db_res->lastInsertId();
+            }
+        }
+
+        return static::$bot_types[$id]['id'];
+    }
+
+    public static function getBots() {
+        if(empty(static::$bot_types))
+        {
+            $stm = static::$db_res->prepare('SELECT * FROM '.BOTS_TBL);
+            $stm->execute();
+            $result = $stm->fetchAll(PDO::FETCH_ASSOC);
+            foreach($result as $value) {
+                static::$bot_types[md5($value['class'].$value['name'])] = $value;
+            }
+        }
+    }
+
+    public static function getBotName($id) {
+        self::getBots();
+        foreach(static::$bot_types as $value) {
+            if($value['id'] == $id) {
+                return $value['class'].' - '.$value['name'];
+            }
+        }
+        return null;
+    }
+
+
+
     
     public static function getMetaTags($url) {
         $rc = null;

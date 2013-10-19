@@ -40,15 +40,8 @@ final Class Event {
         return static::$event_types[$code];
     }
     
-    public static function getBotName($botConfig,$code) {
-        if(!empty($botConfig[$code]['name']))
-        {
-            return $botConfig[$code]['name'];
-        }
-        else
-        {
-            return 'N/A';
-        }
+    public static function getBotName($code) {
+
     }
         
     public static function read($bot_id = null,$event_type = array(),$page = 0, $limit = 50) {
@@ -96,7 +89,7 @@ final Class Event {
     public static function getLatestSuccessTime($bot_id) {
         $dbHandler = Core::getDBHandle();
         
-        $rows = $dbHandler->query('SELECT time FROM '.EVENTS_TBL.' WHERE bot_id = '.$bot_id.' ORDER BY TIME DESC LIMIT 0,1');
+        $rows = $dbHandler->query('SELECT time FROM '.EVENTS_TBL.' WHERE bot_id = '.$bot_id.' and event_type = '.self::E_SUCCESS.'  ORDER BY TIME DESC LIMIT 0,1');
         
         $time = null;
         
@@ -114,7 +107,7 @@ final Class Event {
     public static function write($botId,$eventId,$eventMsg) {
         $dbHandler = Core::getDBHandle();
 
-        $insertSQL = "REPLACE INTO ".EVENTS_TBL." (id, bot_id, event_type, message , time) 
+        $insertSQL = "INSERT INTO ".EVENTS_TBL." (id, bot_id, event_type, message , time)
                     VALUES (:id, :bot_id, :event_type, :message, :time)";
 
         $upstream = $dbHandler->prepare($insertSQL);  

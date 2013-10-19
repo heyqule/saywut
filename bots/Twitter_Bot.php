@@ -72,7 +72,8 @@ class Twitter_Bot extends Bot {
                 $post->provider_id = $this->provider_id;
                 $post->provider_cid = $value->id_str;
                 $post->contents = $value->text;
-                $post->tags = null;     
+                $post->create_time = date(DT_FORMAT,strtotime($value->created_at));
+                $post->update_time = date(DT_FORMAT,strtotime($value->created_at));
                 
                 $targetPost = new Post();
                 $targetPost->loadByProdviderId($post->provider_id, $post->provider_cid);
@@ -86,7 +87,7 @@ class Twitter_Bot extends Bot {
 
                     $custom_data->imageUrl = $value->entities->media[0]->media_url;
                 
-                    $post->custom_data = json_encode($custom_data);
+                    $post->meta = $custom_data;
                 }
                 else if(!empty($value->entities->urls[0]->expanded_url))
                 {
@@ -166,10 +167,10 @@ class Twitter_Bot extends Bot {
                         $custom_data->card_description = $metas['description'];                    
                     }                    
                                     
-                    $post->custom_data = json_encode($custom_data);                    
+                    $post->meta = $custom_data;
                 }
                 else {
-                   $post->custom_data = null;
+                   $post->meta = null;
                 }
                 $post->time = date(DT_FORMAT, strtotime($value->created_at));                
                 if($post->save())
@@ -195,23 +196,4 @@ class Twitter_Bot extends Bot {
             throw new Exception($this->error);
         }
     }
-
-    public function convertJSON($buffer) {
-        return json_decode(substr($buffer,strpos($buffer,'{"') ));
-    }
-
-    /*
-    function __destruct() {
-
-    }
-    */
-/*
- * Override this function if you need to do more than just fetch and store
- *
- * Example:
- *  - fetch multiple sources
- *
- */
-    
-     //public function run() {}
 }

@@ -10,6 +10,9 @@ require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
 Event::cleanup();
 $arr = Event::read();
 
+Core::getBots();
+
+
 ?>
 <h1>View Log</h1>
 <hr />

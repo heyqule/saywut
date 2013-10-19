@@ -26,10 +26,14 @@ if(!empty($_POST['contents']) &&
     {
         $temp->tags = $_POST['tags'];
     }
+
+    //Need more work
+    /*
     if(!empty($_POST['custom_data']))
     {
         $temp->custom_data = $_POST['custom_data'];
     }
+    */
 
     if(!empty($GLOBALS['BOT_CONFIG'][$_POST['post_type']]['hidden']))
     {
@@ -79,15 +83,6 @@ if(!empty($_POST['contents']) &&
             <div id="editor" style="width:75%; height:500px;"></div>
         </li>
 
-        <li>
-            <label>Tags:</label>
-            <input type="text" name="tags" />
-        </li>
-
-        <li>
-            <label>Custom Data:</label>
-            <div id="custom_data_editor" style="width:75%; height:250px;"></div>
-        </li>
 
         <li>
             <input type="hidden" id="contents" name="contents"/>
@@ -112,14 +107,5 @@ if(!empty($_POST['contents']) &&
     editor.getSession().on('change', function(e) {
         preview.html(editor.getValue());
         contents.val(editor.getValue());
-    });
-
-    var custData = ace.edit("custom_data_editor");
-    custData.setTheme("ace/theme/monokai");
-    custData.getSession().setMode("ace/mode/json");
-    var custom_data = jQuery('#custom_data');
-
-    custData.getSession().on('change', function(e) {
-        custom_data.val(custData.getValue());
     });
 </script>

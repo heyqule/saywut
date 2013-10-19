@@ -66,11 +66,6 @@ if(
     if(!empty($_POST['title']))
         $currentPost->title = $_POST['title'];
 
-    if(!empty($_POST['tags']))
-        $currentPost->tags = $_POST['tags'];
-    if(!empty($_POST['custom_data']))
-        $currentPost->custom_data = $_POST['custom_data'];
-
     if($currentPost->save()) {
         $msg = $currentPost->id." has been updated.";
         Event::write($currentPost->provider_id,EVENT::E_SUCCESS,$msg);
@@ -97,19 +92,10 @@ if(
             <div id="editor" style="width:75%; height:500px;"><?php  echo  htmlspecialchars($currentPost->contents); ?></div>
         </li>
 
-        <li>
-            <label>Tags:</label>
-            <input type="text" name="tags" value="<?php echo $currentPost->tags; ?>"/>
-        </li>
-
-        <li>
-            <label>Custom Data:</label>
-            <div id="custom_data_editor" style="width:75%; height:250px;"><?php  echo $currentPost->custom_data?></div>
-        </li>
 
         <li>
             <input type="hidden" id="contents" name="contents"/>
-            <input type="hidden" id="custom_data" name="custom_data"/>
+
             <input type="submit" value="Submit" />
         </li>
     </ul>
@@ -133,17 +119,6 @@ if(
     editor.getSession().on('change', function(e) {
         preview.html(editor.getValue());
         contents.val(editor.getValue());
-    });
-
-    var custData = ace.edit("custom_data_editor");
-    custData.setTheme("ace/theme/monokai");
-    custData.getSession().setMode("ace/mode/json");
-    var custom_data = jQuery('#custom_data');
-
-    custom_data.val(custData.getValue());
-
-    custData.getSession().on('change', function(e) {
-        custom_data.val(custData.getValue());
     });
 
 </script>

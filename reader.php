@@ -68,13 +68,15 @@ if(!empty($to)) {
     $post_collector->addWhere('to','<=',$to);
 }
 
+
 if(empty($showHidden)) {
-  $post_collector->addWhere('hidden','=',0);
+    $post_collector->addMetaWhere('hidden','=',0);
 }
 elseif(!empty($onlyHidden))
 {
-    $post_collector->addWhere('hidden','=',1);
+    $post_collector->addMetaWhere('hidden','=',1);
 }
+
 
 $posts = $post_collector->loadByQuery($offset*10,10);
 
@@ -88,19 +90,17 @@ $rc = array();
 
 foreach($posts as $post) {
     $tmp = new stdClass();
+    $tmp->provider_class = strtolower($GLOBALS['BOT_CONFIG'][$post->provider_id]['class']);
     $tmp->provider = strtolower($GLOBALS['BOT_CONFIG'][$post->provider_id]['name']);
     $tmp->title = $post->title;
     $tmp->contents = $post->contents;
     $tmp->provider_cid = $post->provider_cid;
-    if(!empty($post->tags))
+
+    if(!empty($post->meta))
     {
-        $tmp->tags = $post->tags;
-    }
-    if(!empty($post->custom_data))
-    {
-        $tmp->custom_data = $post->custom_data;
+        $tmp->meta = $post->meta;
     }    
-    $tmp->time = $post->time;
+    $tmp->create_time = $post->create_time;
     $rc[] = $tmp;
 }
 

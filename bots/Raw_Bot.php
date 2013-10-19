@@ -62,16 +62,15 @@ class Raw_Bot extends Bot {
                 {
                     $post->provider_cid = $value->cid;
                 }
+                else
+                {
+                    $post->provider_cid = uniqid();
+                }
 
                 $post->contents = $value->contents;
 
-                $post->tags = null;
-                if(!empty($value->tags))
-                {
-                    $post->tags = $value->tags;
-                }
+                $post->create_time = date(DT_FORMAT, time());
 
-                $post->time = date(DT_FORMAT, time());
 
                 $post->hidden = null;
                 if(!empty($value->hidden))

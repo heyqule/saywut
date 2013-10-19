@@ -8,12 +8,16 @@
 define('DS',DIRECTORY_SEPARATOR);
 define('ROOT_PATH',__DIR__);
 
-define('DB_PATH', 'sample.sqlite');
-define('DB_USER','sample');
-define('DB_PASS','sample');
+define('MYSQL_DB_HOST', 'localhost');
+define('MYSQL_DB_PORT', '3306');
+define('MYSQL_DB_NAME', 'something');
+define('MYSQL_DB_USER','something');
+define('MYSQL_DB_PASS','something');
 
 define('POSTS_TBL','posts');
-define('EVENTS_TBL','events');
+define('EVENTS_TBL','posts_logs');
+define('META_TBL','posts_meta');
+define('BOTS_TBL','posts_bots');
 
 define('DT_FORMAT','Y-m-d H:i:s');
 
