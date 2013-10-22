@@ -73,6 +73,10 @@ if(
         $currentPost->title = $_POST['title'];
 
 
+    if(!empty($_POST['create_time'])) {
+        $currentPost->create_time = date(DT_FORMAT,strtotime($_POST['create_time']));
+    }
+
 
     if($currentPost->save()) {
         $msg = $currentPost->id." has been updated.";
@@ -85,8 +89,8 @@ if(
 <form action="" method="post">
     <ul class="input_form">
         <li>
-            <label>Post Type:</label>
-            <?php echo $post_type.' Last Update:'.$currentPost->update_time.' Hidden:'.$currentPost->hidden; ?>
+            Post Type:
+            <?php echo $post_type.' <br /> Last Update: '.$currentPost->update_time; ?>
         </li>
 
         <li>
@@ -100,7 +104,11 @@ if(
         </li>
 
         <li>
+            <label>Create Date:</label>
+            <input id="create_time" name="create_time" value="<?php echo $currentPost->create_time; ?>" />
+        </li>
 
+        <li>
             <input type="submit" value="Submit" />
         </li>
     </ul>

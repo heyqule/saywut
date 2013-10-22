@@ -29,7 +29,7 @@ class Raw_Bot extends Bot {
             $this->store();
         }
 
-        return this;
+        return $this;
     }
 
     public function fetch() {
@@ -72,11 +72,16 @@ class Raw_Bot extends Bot {
                 $post->create_time = date(DT_FORMAT, time());
 
 
-                $post->hidden = null;
-                if(!empty($value->hidden))
+
+                if(!empty($value->meta) && !empty($value->meta->hidden))
                 {
                     $post->meta = new stdClass();
                     $post->meta->hidden = $value->hidden;
+                }
+                else
+                {
+                    $post->meta = new stdClass();
+                    $post->meta->hidden = 0;
                 }
 
                 $post->update_time = date(DT_FORMAT, time());

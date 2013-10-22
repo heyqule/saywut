@@ -19,7 +19,7 @@ if(!empty($_GET['offset']))
     $offset = $_GET['offset'] * $perpage;
 }
 
-$post = $collect->loadByQuery($offset,$perpage);
+$post = $collect->addOrderBy('id')->loadByQuery($offset,$perpage);
 ?>
 <table>
     <tr>
@@ -41,7 +41,7 @@ $post = $collect->loadByQuery($offset,$perpage);
             <td class="col_type"><?php echo Core::getBotName($value->provider_id); ?></td>
             <td class="col_type_cid"><?php echo $value->provider_cid; ?></td>
             <td class="col_content"><?php echo substr(strip_tags($value->contents),0,140); ?></td>
-            <td class="col_hidden"><?php echo ($value->hidden) ? 'true' : 'false'; ?></td>
+            <td class="col_hidden"><?php echo ($value->meta->hidden) ? 'true' : 'false'; ?></td>
 
         </tr>
     <?php endforeach; ?>

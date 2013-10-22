@@ -9,10 +9,12 @@ require_once ROOT_PATH.DS.'includes'.DS.'Post.php';
 class Post_Collection extends Post_Resource
 {
     protected $_where;
+    protected $_orderBy;
 
     function __construct() {
         parent::__construct();
         $this->_where = array();
+        $this->_orderBy = array();
     }
 
     function addWhere($name,$op,$value,$isOr = false,$name_postfix = '') {
@@ -25,6 +27,18 @@ class Post_Collection extends Post_Resource
         $temp->prefix = '';
         $temp->postfix ='';
         $this->_where[$name.$name_postfix] = $temp;
+        return $this;
+    }
+
+    function addOrderBy($column,$desc = true) {
+        $ordStr = ($desc) ? 'DESC' : 'ASC';
+        $this->_orderBy[$column] = 'p.'.$column.' '.$ordStr;
+        return $this;
+    }
+
+    function removeOrderBy($column) {
+        unset($this->_orderBy[$column]);
+        return $this;
     }
 
     function addMetaWhere($name,$op,$value,$name_postfix = '') {
@@ -49,6 +63,17 @@ class Post_Collection extends Post_Resource
         $metavalue->prefix = '';
         $metavalue->postfix =')';
         $this->_where[$metavalue->name.$metaname->value] = $metavalue;
+        return $this;
+    }
+
+    public function removeWhere($attr) {
+        unset($this->_where[$attr]);
+        return $this;
+    }
+
+    public function removeMetaWhere($attr) {
+        unset($this->_where['m.meta_name'.$attr]);
+        return $this;
     }
     
     public function loadByQuery($offset = 0, $limit = 10)
@@ -57,8 +82,12 @@ class Post_Collection extends Post_Resource
         $sql = "SELECT DISTINCT p.* FROM ".POSTS_TBL." as p LEFT JOIN ".META_TBL." as m on p.id = m.post_id ";
 
         $sql .= $this->_buildWhere();
-        
-        $sql .= "ORDER BY p.create_time DESC LIMIT :offset, :limit";
+
+        if(empty($this->_orderBy)) {
+            $this->_orderBy[] = 'p.create_time DESC';
+        }
+
+        $sql .= "ORDER BY ".implode(',',$this->_orderBy)." LIMIT :offset, :limit";
 
         $sth = $this->db_res->prepare($sql);
 
@@ -132,13 +161,13 @@ class Post_Collection extends Post_Resource
 
     public function getSize() {
 
-        $sql = "SELECT count(*) FROM ".POSTS_TBL.' ';
+        $sql = "SELECT count(*) FROM ".POSTS_TBL.' as p ';
         $sql .= $this->_buildWhere();
 
         $sth = $this->db_res->prepare($sql);
 
         foreach($this->_where as $val) {
-            $sth->bindValue(':'.$val->name.$val->name_postfix,$val->value);
+            $sth->bindValue(':'.str_replace('.','',$val->name).$val->name_postfix,$val->value);
         }
 
         $sth->execute();

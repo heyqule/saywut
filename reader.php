@@ -61,11 +61,11 @@ if(!empty($query)) {
 }
 
 if(!empty($from)) {
-    $post_collector->addWhere('from','>=',$from);
+    $post_collector->addWhere('create_date','>=',$from);
 }
 
 if(!empty($to)) {
-    $post_collector->addWhere('to','<=',$to);
+    $post_collector->addWhere('create_date','<=',$to);
 }
 
 

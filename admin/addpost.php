@@ -37,7 +37,13 @@ if(!empty($_POST['contents']) &&
 
     if(!empty($GLOBALS['BOT_CONFIG'][$_POST['post_type']]['hidden']))
     {
-        $temp->hidden = 1;
+        $temp->meta = new stdClass();
+        $temp->meta->hidden = 1;
+    }
+    else
+    {
+        $temp->meta = new stdClass();
+        $temp->meta->hidden = 0;
     }
 
 
