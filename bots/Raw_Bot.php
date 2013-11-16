@@ -57,10 +57,10 @@ class Raw_Bot extends Bot {
 
                 $post->provider_id = $this->provider_id;
 
-                $post->cid = null;
-                if(!empty($value->cid))
+                $post->provider_cid = null;
+                if(!empty($value->provider_cid))
                 {
-                    $post->provider_cid = $value->cid;
+                    $post->provider_cid = $value->provider_cid;
                 }
                 else
                 {

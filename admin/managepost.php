@@ -12,7 +12,7 @@ require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 $collect = new Post_Collection();
 
-$perpage = 25;
+$perpage = 1000;
 $offset = 0;
 if(!empty($_GET['offset']))
 {

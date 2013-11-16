@@ -44,7 +44,8 @@ class Post_Resource {
 
             $insert_post = "INSERT INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, create_time, update_time)
                         VALUES (:id, :title, :provider_id, :provider_cid, :contents, :create_time, :update_time)
-                        ON DUPLICATE KEY UPDATE title = :title, contents = :contents, create_time = :create_time, update_time = :update_time;";
+                        ON DUPLICATE KEY UPDATE title = :title, contents = :contents, create_time = :create_time, update_time = :update_time,
+                        provider_cid = :provider_cid;";
 
             $this->insert_post_stm = $this->db_res->prepare($insert_post);
 
