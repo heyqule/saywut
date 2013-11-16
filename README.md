@@ -1,8 +1,8 @@
 WTF is saywut bot?
 ==================
-A collection of bots which archive posts from various sources, e.g twitter, to a central sqlite table. 
+A collection of bots which archive posts from various sources, e.g twitter, to a central db.
 
-**DEMO**: <http://www.heyqule.com/#saywut>
+**DEMO**: <http://www.heyqule.com>
 
 Usage
 -----

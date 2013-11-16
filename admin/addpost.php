@@ -22,9 +22,9 @@ if(!empty($_POST['contents']) &&
     {
         $temp->title = $_POST['title'];
     }
-    if(!empty($_POST['tags']))
+    if(!empty($_POST['provider_cid']))
     {
-        $temp->tags = $_POST['tags'];
+        $temp->provider_cid = $_POST['provider_cid'];
     }
 
     //Need more work
@@ -83,6 +83,10 @@ if(!empty($_POST['contents']) &&
             <input type="text" name="title" />
         </li>
         <li>
+            <label>Provider CID:</label>
+            <input type="text" name="provider_cid" />
+        </li>
+        <li>
             <label>Content:</label>
             <textarea id="contents" style="width:75%; height:500px;" name="contents"></textarea>
         </li>
@@ -93,8 +97,3 @@ if(!empty($_POST['contents']) &&
         </li>
     </ul>
 </form>
-<h4>Preview</h4>
-<hr />
-<div class="preview">
-
-</div>

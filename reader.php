@@ -40,32 +40,31 @@ if(empty($offset)) {
 $post_collector = new Post_Collection();
 if(!empty($provider))
 {
-    $post_collector->addWhere('provider_id','=',$provider);
+    $post_collector->addWhere('provider_id','=',$provider)->addRaw('AND');
 }
 
 if(!empty($query)) {
     $tokens = explode(" ",$query);
     $first = true;
+
+    $post_collector->addRaw('(');
+
     foreach($tokens as $idx => $val)
     {
-        if($first)
-        {
-            $post_collector->addWhere('contents','LIKE','%'.$val.'%',null,$idx);
-            $first = false;
-        }
-        else
-        {
-            $post_collector->addWhere('contents','LIKE','%'.$val.'%',true,$idx);
-        }
+        if($continue) $post_collector->addRaw('OR');
+        $post_collector->addWhere('contents','LIKE','%'.$val.'%',$idx);
+        $continue = true;
     }
+
+    $post_collector->addRaw(')');
 }
 
 if(!empty($from)) {
-    $post_collector->addWhere('create_date','>=',$from);
+    $post_collector->addWhere('create_time','>=',$from)->addRaw('AND');
 }
 
 if(!empty($to)) {
-    $post_collector->addWhere('create_date','<=',$to);
+    $post_collector->addWhere('create_time','<=',$to)->addRaw('AND');
 }
 
 

@@ -72,6 +72,9 @@ if(
     if(!empty($_POST['title']))
         $currentPost->title = $_POST['title'];
 
+    if(!empty($_POST['provider_cid']))
+        $currentPost->provider_cid = $_POST['provider_cid'];
+
 
     if(!empty($_POST['create_time'])) {
         $currentPost->create_time = date(DT_FORMAT,strtotime($_POST['create_time']));
@@ -97,7 +100,10 @@ if(
             <label>Title:</label>
             <input type="text" name="title" value="<?php echo $currentPost->title ?>"/>
         </li>
-
+        <li>
+            <label>Provider CID:</label>
+            <input type="text" name="provider_cid" value="<?php echo $currentPost->provider_cid ?>" />
+        </li>
         <li>
             <label>Content:</label>
             <textarea id="contents" style="width:75%; height:500px;" name="contents"><?php  echo  htmlspecialchars($currentPost->contents); ?></textarea>
@@ -113,8 +119,5 @@ if(
         </li>
     </ul>
 </form>
-<h4>Preview</h4>
-<hr />
-<div class="preview">
 
 </div>

@@ -21,7 +21,6 @@ final class Core {
 
 
     public static function getBotKey($botInfo) {
-        self::getDBHandle();
         $id = md5($botInfo['class'].$botInfo['name']);
 
         self::getBots();
@@ -40,6 +39,7 @@ final class Core {
     }
 
     public static function getBots() {
+        self::getDBHandle();
         if(empty(static::$bot_types))
         {
             $stm = static::$db_res->prepare('SELECT * FROM '.BOTS_TBL);
@@ -49,6 +49,8 @@ final class Core {
                 static::$bot_types[md5($value['class'].$value['name'])] = $value;
             }
         }
+
+        return static::$bot_types;
     }
 
     public static function getBotName($id) {

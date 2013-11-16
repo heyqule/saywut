@@ -11,15 +11,18 @@ class Post_Collection extends Post_Resource
     protected $_where;
     protected $_orderBy;
 
+    protected $_raw;
+
     function __construct() {
         parent::__construct();
         $this->_where = array();
         $this->_orderBy = array();
+
+        $this->_raw = 0;
     }
 
-    function addWhere($name,$op,$value,$isOr = false,$name_postfix = '') {
+    function addWhere($name,$op,$value,$name_postfix = '') {
         $temp = new stdClass();
-        $temp->isOr = $isOr;
         $temp->name = 'p.'.$name;
         $temp->name_postfix = $name_postfix;
         $temp->op = $op;
@@ -44,7 +47,6 @@ class Post_Collection extends Post_Resource
     function addMetaWhere($name,$op,$value,$name_postfix = '') {
         //META NAME
         $metaname = new stdClass();
-        $metaname->isOr = false;
         $metaname->name = 'm.meta_name';
         $metaname->name_postfix = '';
         $metaname->op = $op;
@@ -53,9 +55,10 @@ class Post_Collection extends Post_Resource
         $metaname->postfix ='';
         $this->_where[$metaname->name.$metaname->value] = $metaname;
 
+        $this->addRaw('AND');
+
         //META_VALUE
         $metavalue = new stdClass();
-        $metavalue->isOr = false;
         $metavalue->name = 'm.meta_value';
         $metavalue->name_postfix = '';
         $metavalue->op = $op;
@@ -73,6 +76,20 @@ class Post_Collection extends Post_Resource
 
     public function removeMetaWhere($attr) {
         unset($this->_where['m.meta_name'.$attr]);
+        return $this;
+    }
+
+    /**
+     * Add Raw Value to sql
+     */
+    public function addRaw($sqlSegment) {
+        $temp = new stdClass();
+        $temp->name = 'raw.'.$this->_raw;
+        $temp->value = $sqlSegment;
+        $this->_where['raw.'.$this->_raw] = $temp;
+
+        $this->_raw++;
+
         return $this;
     }
     
@@ -108,24 +125,21 @@ class Post_Collection extends Post_Resource
     protected function _buildWhere() {
         $isFirst = true;
         $sql = '';
-        foreach($this->_where as $val)
+        foreach($this->_where as $key => $val)
         {
             if($isFirst) {
-                $sql .= "WHERE ";
+                $sql .= " WHERE ";
                 $isFirst = false;
             }
-            else
-            {
-                if($val->isOr)
-                {
-                    $sql .= "OR ";
-                }
-                else
-                {
-                    $sql .= "AND ";
-                }
 
+            if(strpos($key,'raw.') !== false)
+            {
+                $sql .= ' '.$val->value.' ';
+                unset($this->_where[$key]);
+                continue;
             }
+
+
             $sql .= "{$val->prefix} {$val->name} {$val->op} :".str_replace('.','',$val->name)."{$val->name_postfix} {$val->postfix} ";
         }
         return $sql;
