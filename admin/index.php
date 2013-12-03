@@ -22,7 +22,7 @@ if(empty($_SESSION['is_logged'])) {
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="main.css"/>
-
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
     <script type="text/javascript" src="plugins.js"></script>
 </head>

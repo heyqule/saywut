@@ -46,6 +46,16 @@ if(!empty($_POST['contents']) &&
         $temp->meta->hidden = 0;
     }
 
+    $meta_name = $_POST['meta_name'];
+    $meta_value = $_POST['meta_value'];
+
+    foreach($meta_name as $key => $value) {
+        if(!empty($meta_value[$key])) {
+            $temp->meta->$meta_name[$key] = $meta_value[$key];
+        }
+    }
+
+
 
     $data[] = $temp;
     $bot = new Raw_Bot($_POST['post_type'],$data,true);
@@ -90,10 +100,23 @@ if(!empty($_POST['contents']) &&
             <label>Content:</label>
             <textarea id="contents" style="width:75%; height:500px;" name="contents"></textarea>
         </li>
-
-        <li>
-
-            <input type="submit" value="Submit" />
-        </li>
     </ul>
+    <h2>Meta Fields</h2>
+    <ul class="meta_fields">
+        <li><div class="col1"><label>Meta Name</label><input type="text" name="meta_name[]" /><br /><button type="button">Delete</button></div><div class="col2"><label>Meta Value</label><textarea name="meta_value[]" /></textarea></div></li>
+    </ul>
+    <button type="button" class="new_meta">New Meta Field</button>
+    <br /><br />
+    <button type="submit">Submit</button>
 </form>
+<script type="text/javascript">
+$('.new_meta').click(function(e) {
+    $('.meta_fields').append('<li><div class="col1"><label>Meta Name</label><input type="text" name="meta_name[]" /><br /><button type="button">Delete</button></div><div class="col2"><label>Meta Value</label><textarea name="meta_value[]" /></textarea></div></li>');
+    e.preventDefault();
+});
+
+$('.meta_fields').on('click','li button',function() {
+    var jThis = $(this);
+    jThis.parent().parent().remove();
+});
+</script>

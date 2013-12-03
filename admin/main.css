@@ -48,10 +48,25 @@ input {
     width:50%;
 }
 
-input[type="submit"] {
-    width:150px;
-}
-
 table tr td {
     padding:10px 0;
+}
+
+.meta_fields div {
+    width:50%;
+    float:left;
+}
+
+.meta_fields input,
+.meta_fields textarea {
+    min-width:200px;
+    width:50%;
+    vertical-align: top;
+}
+
+.meta_fields textarea { height:50px; }
+
+.meta_fields li {
+    overflow:auto;
+    margin-bottom:10px;
 }

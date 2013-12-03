@@ -120,15 +120,13 @@ class Post_Resource {
             $meta_result = $this->db_res->query('SELECT * FROM '.META_TBL.' WHERE post_id = '.$rc_row['id'],PDO::FETCH_ASSOC);
 
             foreach($meta_result as $row) {
-                $post = $rc_row;
-                if(empty($post['meta'])) {
-                    $post['meta'] = new stdClass();
+                if(empty($rc_row['meta'])) {
+                    $rc_row['meta'] = new stdClass();
                 }
-                $post['meta']->$row['meta_name'] = $row['meta_value'];
+                $rc_row['meta']->$row['meta_name'] = $row['meta_value'];
             }
 
         }
-
 
         return $rc_row;
     }

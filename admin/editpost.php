@@ -80,6 +80,15 @@ if(
         $currentPost->create_time = date(DT_FORMAT,strtotime($_POST['create_time']));
     }
 
+    $meta_name = $_POST['meta_name'];
+    $meta_value = $_POST['meta_value'];
+
+    foreach($meta_name as $key => $value) {
+        if(!empty($meta_value[$key])) {
+            $currentPost->meta->$meta_name[$key] = $meta_value[$key];
+        }
+    }
+
 
     if($currentPost->save()) {
         $msg = $currentPost->id." has been updated.";
@@ -113,11 +122,26 @@ if(
             <label>Create Date:</label>
             <input id="create_time" name="create_time" value="<?php echo $currentPost->create_time; ?>" />
         </li>
-
-        <li>
-            <input type="submit" value="Submit" />
-        </li>
     </ul>
+    <h2>Meta Fields</h2>
+    <ul class="meta_fields">
+    <?php
+        if($currentPost->meta):
+        foreach($currentPost->meta as $key => $value):
+    ?>
+        <li><div class="col1"><label>Meta Name</label><input type="text" name="meta_name[]" value="<?php echo $key ?>" /></div><div class="col2"><label>Meta Value</label><textarea name="meta_value[]" /><?php echo $value ?></textarea></div></li>
+    <?php endforeach; endif; ?>
+    </ul>
+    <button type="button" class="new_meta">New Meta Field</button>
+    <br /><br />
+    <button type="submit">Submit</button>
 </form>
 
-</div>
+<script type="text/javascript">
+    $('.new_meta').click(function(e) {
+        $('.meta_fields').append('<li><div class="col1"><label>Meta Name</label><input type="text" name="meta_name[]" /></div><div class="col2"><label>Meta Value</label><textarea name="meta_value[]" /></textarea></div></li>');
+        e.preventDefault();
+    });
+
+</script>
+
