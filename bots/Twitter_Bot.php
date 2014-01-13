@@ -71,7 +71,7 @@ class Twitter_Bot extends Bot {
                 $post->title = null;
                 $post->provider_id = $this->provider_id;
                 $post->provider_cid = $value->id_str;
-                $post->contents = $value->text;
+                $post->contents = utf8_decode($value->text);
                 $post->create_time = date(DT_FORMAT,strtotime($value->created_at));
                 $post->update_time = date(DT_FORMAT,strtotime($value->created_at));
                 
@@ -132,39 +132,38 @@ class Twitter_Bot extends Bot {
                     
                     if(!empty($metas['twitter:site']))
                     {
-                        $custom_data->card_holder = $metas['twitter:site'];
+                        $custom_data->card_holder = utf8_decode($metas['twitter:site']);
                     } 
                     elseif(!empty($metas['og:site_name']))
                     {
-                        $custom_data->card_holder = $metas['og:site_name'];
+                        $custom_data->card_holder = utf8_decode($metas['og:site_name']);
                     }
-                    
                     
                     if(!empty($metas['twitter:title']))
                     {                    
-                        $custom_data->card_title = $metas['twitter:title'];
+                        $custom_data->card_title = utf8_decode($metas['twitter:title']);
                     }
                     elseif(!empty($metas['og:title'])) 
                     {
-                        $custom_data->card_title = $metas['og:title'];
+                        $custom_data->card_title = utf8_decode($metas['og:title']);
                     }
                     elseif(!empty($metas['title']))
                     {
-                        $custom_data->card_title = $metas['title'];
+                        $custom_data->card_title = utf8_decode($metas['title']);
                     }
 
                     
                     if(!empty($metas['twitter:description']))
                     {                    
-                        $custom_data->card_description = $metas['twitter:description'];                    
+                        $custom_data->card_description = utf8_decode($metas['twitter:description']);
                     }
                     elseif(!empty($metas['og:description'])) 
                     {
-                        $custom_data->card_description = $metas['og:description'];                    
+                        $custom_data->card_description = utf8_decode($metas['og:description']);
                     }
                     elseif(!empty($metas['description'])) 
                     {
-                        $custom_data->card_description = $metas['description'];                    
+                        $custom_data->card_description = utf8_decode($metas['description']);
                     }                    
                                     
                     $post->meta = $custom_data;
