@@ -1,11 +1,16 @@
 Version History
 ===============
 
+0.6
+-------------------
+Added keywords for posts
+Uses Fulltext Search - title,contents,keywords column in posts
+Various bug fixes
+
 0.5
 -----
 Switch back to MySQL
 Various changes and fixes
-
 
 0.4
 -----

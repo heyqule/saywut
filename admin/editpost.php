@@ -117,7 +117,10 @@ if(
             <label>Content:</label>
             <textarea id="contents" style="width:75%; height:500px;" name="contents"><?php  echo  htmlspecialchars($currentPost->contents); ?></textarea>
         </li>
-
+        <li>
+            <label>Keywords:</label>
+            <input type="text" name="keywords" />
+        </li>
         <li>
             <label>Create Date:</label>
             <input id="create_time" name="create_time" value="<?php echo $currentPost->create_time; ?>" />

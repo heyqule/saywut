@@ -13,6 +13,7 @@ class Post_Resource {
 
     protected $insert_post_stm;
     protected $insert_post_meta_stm;
+    protected $insert_post_search_stm;
     
     function __construct() {
         $this->db_res = Core::getDBHandle();
@@ -39,13 +40,18 @@ class Post_Resource {
             $data['title'] = null;
         }
 
+        if(empty($data['keywords']))
+        {
+            $data['keywords'] = null;
+        }
+
         if(empty($insert_post_stm))
         {
 
-            $insert_post = "INSERT INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, create_time, update_time)
-                        VALUES (:id, :title, :provider_id, :provider_cid, :contents, :create_time, :update_time)
+            $insert_post = "INSERT INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, create_time, update_time, keywords)
+                        VALUES (:id, :title, :provider_id, :provider_cid, :contents, :create_time, :update_time, :keywords)
                         ON DUPLICATE KEY UPDATE title = :title, contents = :contents, create_time = :create_time, update_time = :update_time,
-                        provider_cid = :provider_cid;";
+                        provider_cid = :provider_cid, keywords = :keywords;";
 
             $this->insert_post_stm = $this->db_res->prepare($insert_post);
 
@@ -53,6 +59,10 @@ class Post_Resource {
                 VALUES (:id, :post_id, :meta_name, :meta_value) ON DUPLICATE KEY UPDATE meta_value = :meta_value;";
 
             $this->insert_post_meta_stm = $this->db_res->prepare($insert_post_meta);
+
+            $insert_post_search = "INSERT INTO ".SEARCH_TBL." (id, title, contents, keywords) VALUES (:id, :title, :contents, :keywords);";
+
+            $this->insert_post_search_stm = $this->db_res->prepare($insert_post_search);
         }
 
         $this->insert_post_stm->execute(
@@ -64,6 +74,7 @@ class Post_Resource {
                 ':contents' => $data['contents'],
                 ':create_time'  => $data['create_time'],
                 ':update_time'  => date(DT_FORMAT, time()),
+                ':keywords' => $data['keywords']
             )
         );
 
@@ -82,12 +93,25 @@ class Post_Resource {
             }
         }
 
+        $this->insert_post_search_stm->execute(
+            array(
+                ':id' => $post_id,
+                ':title' => $data['title'],
+                ':contents' => $data['contents'],
+                ':keywords' => $data['keywords']
+            )
+        );
+
         return $post_id;
     }    
     
     public function delete($id) {
         $stm = $this->db_res->prepare('DELETE FROM '.POSTS_TBL.' WHERE id = :id');
         $stm->execute(array(':id'=>$id));
+        $this->db_res->exec(''.$id);
+
+        $stm2 = $this->db_res->prepare('DELETE FROM '.SEARCH_TBL.' WHERE id = :id');
+        $stm2->execute(array(':id'=>$id));
         $this->db_res->exec(''.$id);
     }
     
@@ -109,6 +133,24 @@ class Post_Resource {
         $rc_row = $this->_fetchResult($stm->fetch(PDO::FETCH_ASSOC));
         
         return $rc_row;        
+    }
+
+    public function reindexAll() {
+        $stm = $this->db_res->prepare(
+            'INSERT INTO '.SEARCH_TBL.' SELECT t.id, t.title, t.contents, t.keywords FROM '.POSTS_TBL.' t LEFT JOIN '.SEARCH_TBL.' s on s.id=t.id WHERE s.id is null');
+
+        $stm->execute();
+
+        $rowCount = $stm->rowCount();
+
+        $stm = $this->db_res->prepare(
+            'DELETE FROM '.SEARCH_TBL.' WHERE id = (SELECT s.id FROM '.SEARCH_TBL.' s LEFT JOIN '.POSTS_TBL.' t on t.id=s.id WHERE t.id is null)');
+
+        $rowCount += $stm->rowCount();
+
+        $stm->execute();
+
+        return $stm->rowCount();
     }
 
     protected function _fetchResult($result) {

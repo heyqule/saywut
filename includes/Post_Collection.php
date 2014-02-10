@@ -12,6 +12,7 @@ class Post_Collection extends Post_Resource
     protected $_orderBy;
 
     protected $_raw;
+    protected $_fulltext;
 
     function __construct() {
         parent::__construct();
@@ -92,11 +93,24 @@ class Post_Collection extends Post_Resource
 
         return $this;
     }
+
+    public function addFullText($query) {
+        $fullTextQuery = 'MATCH (s.title,s.contents,s.keywords) AGAINST (:fulltext_'.$this->_raw.' IN NATURAL LANGUAGE MODE)';
+
+        $temp = new stdClass();
+        $temp->name = 'fulltext_'.$this->_raw;
+        $temp->value = $query;
+        $temp->query = $fullTextQuery;
+        $this->_where['fulltext_'.$this->_raw] = $temp;
+
+        $this->_raw++;
+        return $this;
+    }
     
     public function loadByQuery($offset = 0, $limit = 10)
     {
         
-        $sql = "SELECT DISTINCT p.* FROM ".POSTS_TBL." as p LEFT JOIN ".META_TBL." as m on p.id = m.post_id ";
+        $sql = "SELECT DISTINCT p.* FROM ".POSTS_TBL." as p LEFT JOIN ".META_TBL." as m on p.id = m.post_id LEFT JOIN ".SEARCH_TBL." as s on p.id = s.id ";
 
         $sql .= $this->_buildWhere();
 
@@ -136,6 +150,12 @@ class Post_Collection extends Post_Resource
             {
                 $sql .= ' '.$val->value.' ';
                 unset($this->_where[$key]);
+                continue;
+            }
+
+            if(strpos($key,'fulltext_') !== false)
+            {
+                $sql .= ' '.$val->query.' ';
                 continue;
             }
 

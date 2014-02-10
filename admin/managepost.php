@@ -12,15 +12,40 @@ require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 $collect = new Post_Collection();
 
-$perpage = 1000;
+$limit = 50;
 $offset = 0;
-if(!empty($_GET['offset']))
+$page = $_GET['page'];
+if(isset($page))
 {
-    $offset = $_GET['offset'] * $perpage;
+    $offset = $page * $limit;
 }
 
-$post = $collect->addOrderBy('id')->loadByQuery($offset,$perpage);
+if(isset($_GET['reindexall'])) {
+    $system_message = 'Reindex completed. Affected Rows: '.$collect->reindexAll();
+}
+
+$posts = $collect->addOrderBy('id')->loadByQuery($offset,$limit);
+$size = $collect->getSize();
 ?>
+<h2>System Options</h2>
+<menu>
+    <a href="?l=managepost&reindexall=1">Reindex for Fulltext Search</a>
+</menu>
+<div class="system_message">
+    <?php echo $system_message; ?>
+</div>
+<h2>Pages (<?php echo $size ?> records)</h2>
+<menu>
+    Page:
+    <?php
+    for($i = 1; $i*$limit < $size; $i++) {
+        if($i == $_GET['page'])
+            echo $i.' | ';
+        else
+            echo '<a href="?l=managepost&page='.$i.'">'.$i.'</a> | ';
+    }
+    ?>
+</menu>
 <table>
     <tr>
         <th style="width:10%">ID</th>
@@ -30,7 +55,7 @@ $post = $collect->addOrderBy('id')->loadByQuery($offset,$perpage);
         <th style="width:40%">Contents</th>
         <th style="width:5%">Is Hidden</th>
     </tr>
-    <?php foreach($post as $value):?>
+    <?php foreach($posts as $value):?>
         <tr id="p-<?php echo $value->id; ?>">
             <td class="col_id"><?php echo $value->id; ?><br />
                 <a href="?l=editpost&id=<?php echo $value->id; ?>">Edit</a> <br />

@@ -76,7 +76,7 @@ class Raw_Bot extends Bot {
                 if(!empty($value->meta) && isset($value->meta->hidden))
                 {
                     $post->meta = new stdClass();
-                    $post->meta->hidden = $value->hidden;
+                    $post->meta->hidden = $value->meta->hidden;
                 }
                 else
                 {

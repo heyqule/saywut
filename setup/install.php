@@ -10,12 +10,12 @@ try
     echo 'Initializing DB... <br />';
     $mysql = new PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';',MYSQL_DB_USER,MYSQL_DB_PASS);
 
+    $mysql->beginTransaction();
+
     $mysql->exec('SET FOREIGN_KEY_CHECKS=0;');
 
     echo 'Configuraing Database <br />';
     $mysql->exec('
-DROP TABLE IF EXISTS `posts_bots`;
-
 CREATE TABLE IF NOT EXISTS `posts_bots` (
   `id` int(11) unsigned AUTO_INCREMENT,
   `class` varchar(255) NOT NULL,
@@ -26,12 +26,10 @@ CREATE TABLE IF NOT EXISTS `posts_bots` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
 
-    echo 'posts_bots <br />';
+    echo '<br />posts_bots <br />';
     print_r($mysql->errorInfo());
 
 $mysql->exec('
-DROP TABLE IF EXISTS `posts`;
-
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` bigint(20) unsigned AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL,
@@ -49,12 +47,10 @@ CREATE TABLE IF NOT EXISTS `posts` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
 
-echo 'posts <br />';
+echo '<br />posts <br />';
 print_r($mysql->errorInfo());
 
 $mysql->exec('
-DROP TABLE IF EXISTS `posts_meta`;
-
 CREATE TABLE IF NOT EXISTS `posts_meta` (
   `id` bigint(20) unsigned AUTO_INCREMENT,
   `post_id` bigint(20) unsigned NOT NULL,
@@ -66,12 +62,10 @@ CREATE TABLE IF NOT EXISTS `posts_meta` (
   CONSTRAINT `POST_META_POST_ID` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
-    echo 'posts_meta <br />';
+echo '<br />posts_meta <br />';
 print_r($mysql->errorInfo());
 
 $mysql->exec('
-DROP TABLE IF EXISTS `posts_logs`;
-
 CREATE TABLE IF NOT EXISTS`posts_logs` (
   `id` bigint(20) unsigned AUTO_INCREMENT,
   `bot_id` int(11) unsigned NOT NULL,
@@ -84,18 +78,21 @@ CREATE TABLE IF NOT EXISTS`posts_logs` (
   CONSTRAINT `LOG_POST_BOT` FOREIGN KEY (`bot_id`) REFERENCES `posts_bots` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ');
-    echo 'posts_logs <br />';
+echo '<br />posts_logs <br />';
 print_r($mysql->errorInfo());
+
+include 'update-0.6.php';
 
 $mysql->exec('
 SET FOREIGN_KEY_CHECKS=1;
 ');
 
-echo 'Done...';
+echo '<br /><br />FINAL Done...';
 
-
+    $mysql->commit();
 
 } catch(Exception $e) {
+    $mysql->rollBack();
     echo '<br />ERROR:<br />';
     echo nl2br(print_r($e,true));
 }

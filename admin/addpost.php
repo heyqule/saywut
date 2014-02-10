@@ -9,6 +9,7 @@
 
 require_once ROOT_PATH.DS.'bots'.DS.'Raw_Bot.php';
 
+
 $msg = '';
 
 if(!empty($_POST['contents']) &&
@@ -25,6 +26,10 @@ if(!empty($_POST['contents']) &&
     if(!empty($_POST['provider_cid']))
     {
         $temp->provider_cid = $_POST['provider_cid'];
+    }
+    if(!empty($_POST['keywords']))
+    {
+        $temp->keywords = $_POST['keywords'];
     }
 
     //Need more work
@@ -99,6 +104,10 @@ if(!empty($_POST['contents']) &&
         <li>
             <label>Content:</label>
             <textarea id="contents" style="width:75%; height:500px;" name="contents"></textarea>
+        </li>
+        <li>
+            <label>Keywords:</label>
+            <input type="text" name="keywords" />
         </li>
     </ul>
     <h2>Meta Fields</h2>
