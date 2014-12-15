@@ -18,6 +18,7 @@ define('POSTS_TBL','posts');
 define('EVENTS_TBL','posts_logs');
 define('META_TBL','posts_meta');
 define('BOTS_TBL','posts_bots');
+define('SEARCH_TBL','posts_fulltext');
 
 define('DT_FORMAT','Y-m-d H:i:s');
 
