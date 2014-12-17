@@ -86,6 +86,7 @@ class Post_Collection extends Post_Resource
     public function addRaw($sqlSegment) {
         $temp = new stdClass();
         $temp->name = 'raw.'.$this->_raw;
+        $temp->name_postfix = '';
         $temp->value = $sqlSegment;
         $this->_where['raw.'.$this->_raw] = $temp;
 
@@ -99,6 +100,7 @@ class Post_Collection extends Post_Resource
 
         $temp = new stdClass();
         $temp->name = 'fulltext_'.$this->_raw;
+        $temp->name_postfix = '';
         $temp->value = $query;
         $temp->query = $fullTextQuery;
         $this->_where['fulltext_'.$this->_raw] = $temp;

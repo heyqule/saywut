@@ -22,7 +22,7 @@ class Twitter_Bot extends Bot {
     
     public function __construct($id,$config) {
         parent::__construct($id);
-        $this->qurey_settings['count'] = 60;
+        $this->qurey_settings['count'] = 10;
         $this->qurey_settings['include_rts'] = 1;
         $this->qurey_settings['include_entities'] = 1;
         $this->settings['account'] = $config['account'];
@@ -53,7 +53,6 @@ class Twitter_Bot extends Bot {
      * Data fetching
      */
     protected function fetch() {
-
        $this->data = $this->connection->get('statuses/user_timeline',$this->qurey_settings);
 
        $this->checkError($this->data);
@@ -65,21 +64,22 @@ class Twitter_Bot extends Bot {
         if(is_array($this->data))
         {
             $this->numberChanged = 0;
-            foreach($this->data as $key => $value) {            
+            foreach($this->data as $key => $value) {
+
+                $targetPost = new Post();
+                $targetPost->loadByProdviderId($this->provider_id, $value->id_str);
+                if(!empty($targetPost->id) && !$this->settings['overwrite']) {
+                    continue;
+                }
+
                 $post = new Post();
                 $post->id = null;            
                 $post->title = null;
                 $post->provider_id = $this->provider_id;
                 $post->provider_cid = $value->id_str;
-                $post->contents = utf8_decode($value->text);
+                $post->contents = $value->text;
                 $post->create_time = date(DT_FORMAT,strtotime($value->created_at));
                 $post->update_time = date(DT_FORMAT,strtotime($value->created_at));
-                
-                $targetPost = new Post();
-                $targetPost->loadByProdviderId($post->provider_id, $post->provider_cid);
-                if(!empty($targetPost->id) && !$this->settings['overwrite']) {
-                   continue; 
-                }
                 
                 if(!empty($value->entities->media[0]->media_url))
                 {                
@@ -196,6 +196,35 @@ class Twitter_Bot extends Bot {
         if($this->error)
         {
             throw new Exception($this->error);
+        }
+    }
+
+    public function import() {
+
+        try
+        {
+            $this->qurey_settings['count'] = 200;
+            $canContinue = false;
+            do
+            {
+                $this->data = null;
+                $this->fetch();
+                $canContinue = empty($this->error) && !empty($this->data);
+                if ($canContinue)
+                {
+                    $this->store();
+                    $lastUnit = $this->data[(sizeof($this->data) - 1)];
+                    $newPage = $lastUnit->id_str;
+                    $this->qurey_settings['max_id'] = bcsub($newPage, '1');
+                    Event::write($this->provider_id, Event::E_SUCCESS, 'Imported entries to ID ' . $newPage);
+                }
+            } while ($canContinue);
+
+            Event::write($this->provider_id, Event::E_SUCCESS, 'Number of Change - ' . $this->numberChanged);
+        }
+        catch(Exception $e)
+        {
+            Event::write(0,Event::E_ERROR,$e->getMessage().' @ '.$e->getFile().' L: '.$e->getLine());
         }
     }
 }
