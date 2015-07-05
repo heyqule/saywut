@@ -62,9 +62,7 @@ if(!empty($_GET['delete']) && $_GET['delete'] == 1) {
     die($rc);
 }
 
-if(
-   !empty($_POST['contents'])
-)
+if(!empty($_POST['contents']))
 {
 
     $currentPost->contents = $_POST['contents'];
@@ -75,6 +73,9 @@ if(
     if(!empty($_POST['provider_cid']))
         $currentPost->provider_cid = $_POST['provider_cid'];
 
+    if(!empty($_POST['keywords'])) {
+        $currentPost->keywords = $_POST['keywords'];
+    }
 
     if(!empty($_POST['create_time'])) {
         $currentPost->create_time = date(DT_FORMAT,strtotime($_POST['create_time']));
@@ -92,6 +93,10 @@ if(
 
     if($currentPost->save()) {
         $msg = $currentPost->id." has been updated.";
+    }
+    else
+    {
+        $msg = $currentPost->id." update failed.";
     }
 }
 
@@ -115,11 +120,11 @@ if(
         </li>
         <li>
             <label>Content:</label>
-            <textarea id="contents" style="width:75%; height:500px;" name="contents"><?php  echo  htmlspecialchars($currentPost->contents); ?></textarea>
+            <textarea id="contents" style="width:75%; height:500px;" name="contents"><?php  echo $currentPost->contents; ?></textarea>
         </li>
         <li>
             <label>Keywords:</label>
-            <input type="text" name="keywords" />
+            <input type="text" name="keywords" value="<?php echo $currentPost->keywords ?>" />
         </li>
         <li>
             <label>Create Date:</label>

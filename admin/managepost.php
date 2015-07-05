@@ -14,7 +14,15 @@ $collect = new Post_Collection();
 
 $limit = 50;
 $offset = 0;
-$page = $_GET['page'];
+
+$page = 0;
+if(isset($_GET['page']))
+{
+    $page = $_GET['page'];
+}
+
+$system_message = '';
+
 if(isset($page))
 {
     $offset = $page * $limit;
@@ -38,8 +46,8 @@ $size = $collect->getSize();
 <menu>
     Page:
     <?php
-    for($i = 1; $i*$limit < $size; $i++) {
-        if($i == $_GET['page'])
+    for($i = 0; $i*$limit < $size; $i++) {
+        if($i == $page)
             echo $i.' | ';
         else
             echo '<a href="?l=managepost&page='.$i.'">'.$i.'</a> | ';

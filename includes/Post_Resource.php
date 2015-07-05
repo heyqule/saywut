@@ -48,8 +48,8 @@ class Post_Resource {
         if(empty($insert_post_stm))
         {
 
-            $insert_post = "INSERT INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, create_time, update_time, keywords)
-                        VALUES (:id, :title, :provider_id, :provider_cid, :contents, :create_time, :update_time, :keywords)
+            $insert_post = "INSERT INTO ".POSTS_TBL." (id, title, provider_id, provider_cid , contents, keywords, create_time, update_time)
+                        VALUES (:id, :title, :provider_id, :provider_cid, :contents, :keywords, :create_time, :update_time)
                         ON DUPLICATE KEY UPDATE title = :title, contents = :contents, create_time = :create_time, update_time = :update_time,
                         provider_cid = :provider_cid, keywords = :keywords;";
 
@@ -60,49 +60,84 @@ class Post_Resource {
 
             $this->insert_post_meta_stm = $this->db_res->prepare($insert_post_meta);
 
-            $insert_post_search = "INSERT INTO ".SEARCH_TBL." (id, title, contents, keywords) VALUES (:id, :title, :contents, :keywords);";
+            $insert_post_search = "INSERT INTO ".SEARCH_TBL." (id, title, contents, keywords) VALUES (:id, :title, :contents, :keywords)
+                      ON DUPLICATE KEY UPDATE title = :title, contents = :contents, keywords = :keywords;";
 
             $this->insert_post_search_stm = $this->db_res->prepare($insert_post_search);
         }
 
-        $this->insert_post_stm->execute(
-            array(
-                ':id' => $data['id'],
-                ':title' => $data['title'],
-                ':provider_id' => $data['provider_id'],
-                ':provider_cid' => $data['provider_cid'],
-                ':contents' => $data['contents'],
-                ':create_time'  => $data['create_time'],
-                ':update_time'  => date(DT_FORMAT, time()),
-                ':keywords' => $data['keywords']
-            )
-        );
+        try
+        {
+            $this->db_res->beginTransaction();
 
-        $post_id = $this->db_res->lastInsertId();
+            $this->insert_post_stm->execute(
+                array(
+                    ':id' => $data['id'],
+                    ':title' => $data['title'],
+                    ':provider_id' => $data['provider_id'],
+                    ':provider_cid' => $data['provider_cid'],
+                    ':contents' => $data['contents'],
+                    ':create_time'  => $data['create_time'],
+                    ':update_time'  => date(DT_FORMAT, time()),
+                    ':keywords' => $data['keywords']
+                )
+            );
 
-        if(!empty($data['meta'])) {
-            foreach($data['meta'] as $key => $value) {
-                $this->insert_post_meta_stm->execute(
-                    array(
-                        ':id'=>null,
-                        ':post_id'=>$post_id,
-                        ':meta_name'=>$key,
-                        ':meta_value'=>$value
-                    )
-                );
+            if($this->insert_post_stm->errorCode() != '00000')
+            {
+                throw new Exception('Main SQL Upsert Failed');
+            };
+
+            $post_id = $this->db_res->lastInsertId();
+
+            if(empty($post_id) && $data['id'])
+            {
+                $post_id = $data['id'];
             }
+
+            if(!empty($data['meta'])) {
+                foreach($data['meta'] as $key => $value) {
+                    $this->insert_post_meta_stm->execute(
+                        array(
+                            ':id'=>null,
+                            ':post_id'=>$post_id,
+                            ':meta_name'=>$key,
+                            ':meta_value'=>$value
+                        )
+                    );
+
+                    if($this->insert_post_meta_stm->errorCode() != '00000')
+                    {
+                        throw new Exception('Meta SQL Upsert Failed @ '.$key);
+                    };
+                }
+            }
+
+            $this->insert_post_search_stm->execute(
+                array(
+                    ':id' => $post_id,
+                    ':title' => $data['title'],
+                    ':contents' => $data['contents'],
+                    ':keywords' => $data['keywords']
+                )
+            );
+
+            $lol = $this->insert_post_search_stm->errorCode();
+            $info = $this->insert_post_search_stm->errorInfo();
+
+            if($this->insert_post_search_stm->errorCode() != '00000')
+            {
+                throw new Exception('Index SQL Failed @');
+            };
+
+            $this->db_res->commit();
+            return $post_id;
         }
-
-        $this->insert_post_search_stm->execute(
-            array(
-                ':id' => $post_id,
-                ':title' => $data['title'],
-                ':contents' => $data['contents'],
-                ':keywords' => $data['keywords']
-            )
-        );
-
-        return $post_id;
+        catch(Exception $e)
+        {
+            throw new Exception($e->getMessage());
+            $this->db_res->rollBack();
+        }
     }    
     
     public function delete($id) {

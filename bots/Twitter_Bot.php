@@ -22,7 +22,7 @@ class Twitter_Bot extends Bot {
     
     public function __construct($id,$config) {
         parent::__construct($id);
-        $this->qurey_settings['count'] = 10;
+        $this->qurey_settings['count'] = 50;
         $this->qurey_settings['include_rts'] = 1;
         $this->qurey_settings['include_entities'] = 1;
         $this->settings['account'] = $config['account'];
@@ -216,7 +216,7 @@ class Twitter_Bot extends Bot {
                     $lastUnit = $this->data[(sizeof($this->data) - 1)];
                     $newPage = $lastUnit->id_str;
                     $this->qurey_settings['max_id'] = bcsub($newPage, '1');
-                    Event::write($this->provider_id, Event::E_SUCCESS, 'Imported entries to ID ' . $newPage);
+                    echo "\n Imported: ".$newPage;
                 }
             } while ($canContinue);
 

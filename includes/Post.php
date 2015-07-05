@@ -42,7 +42,7 @@ class Post
             Event::write(
                 $this->provider_id,
                 Event::E_SUCCESS,
-                'Saved ID:'.$this->id.' - '.Core::getBotName($this->provider_id).' - '.$this->provider_cid
+                'Saved ID:' . $this->id . ' - ' . Core::getBotName($this->provider_id) . ' - ' . $this->provider_cid
             );
             return $this->id;
         }
