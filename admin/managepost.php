@@ -16,9 +16,15 @@ $limit = 50;
 $offset = 0;
 
 $page = 0;
+$anchorUrl = '?l=managepost';
 if(isset($_GET['page']))
 {
     $page = $_GET['page'];
+}
+
+if(isset($_POST['query']))
+{
+    $collect->addFullText($_POST['query']);
 }
 
 $system_message = '';
@@ -37,12 +43,15 @@ $size = $collect->getSize();
 ?>
 <h2>System Options</h2>
 <menu>
-    <a href="?l=managepost&reindexall=1">Reindex for Fulltext Search</a>
+    <a href="<?php echo $anchorUrl ?>&reindexall=1">Reindex for Fulltext Search</a>
 </menu>
 <div class="system_message">
     <?php echo $system_message; ?>
 </div>
 <h2>Pages (<?php echo $size ?> records)</h2>
+<form id="search" method="post" action="<?php echo $anchorUrl ?>">
+    Searchere: <input type="text" name="query" /> <input type="submit" />
+</form>
 <menu>
     Page:
     <?php
@@ -50,7 +59,7 @@ $size = $collect->getSize();
         if($i == $page)
             echo $i.' | ';
         else
-            echo '<a href="?l=managepost&page='.$i.'">'.$i.'</a> | ';
+            echo '<a href="' . $anchorUrl . '&page='.$i.'">'.$i.'</a> | ';
     }
     ?>
 </menu>

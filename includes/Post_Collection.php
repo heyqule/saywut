@@ -197,7 +197,7 @@ class Post_Collection extends Post_Resource
 
     public function getSize() {
 
-        $sql = "SELECT count(*) FROM ".POSTS_TBL.' as p ';
+        $sql = "SELECT count(*) FROM ".SEARCH_TBL.' as s ';
         $sql .= $this->_buildWhere();
 
         $sth = $this->db_res->prepare($sql);

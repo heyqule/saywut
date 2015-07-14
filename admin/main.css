@@ -48,6 +48,16 @@ input {
     width:50%;
 }
 
+#search input
+{
+    width:250px;
+}
+
+#search input[type=submit]
+{
+    width:150px;
+}
+
 table tr td {
     padding:10px 0;
 }
