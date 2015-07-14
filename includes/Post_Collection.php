@@ -197,7 +197,7 @@ class Post_Collection extends Post_Resource
 
     public function getSize() {
 
-        $sql = "SELECT count(*) FROM ".SEARCH_TBL.' as s ';
+        $sql = "SELECT DISTINCT p.id FROM ".POSTS_TBL.' as p LEFT JOIN '.META_TBL.' as m on p.id = m.post_id LEFT JOIN '.SEARCH_TBL.' as s on p.id = s.id ';
         $sql .= $this->_buildWhere();
 
         $sth = $this->db_res->prepare($sql);
@@ -210,6 +210,6 @@ class Post_Collection extends Post_Resource
 
         $result = $sth->fetchAll();
 
-        return $result[0][0];
+        return count($result);
     }
 }
