@@ -96,7 +96,16 @@ class Post_Collection extends Post_Resource
     }
 
     public function addFullText($query) {
-        $fullTextQuery = 'MATCH (s.title,s.contents,s.keywords) AGAINST (:fulltext_'.$this->_raw.' IN NATURAL LANGUAGE MODE)';
+        $fullTextQuery = 'MATCH (s.title,s.contents,s.keywords) AGAINST (:fulltext_'.$this->_raw.' IN BOOLEAN MODE)';
+
+        $words = explode(' ',$query);
+
+        foreach($words as $key => $word)
+        {
+            $words[$key] = '+'.$word.'*';
+        }
+
+        $query = implode(' ',$words);
 
         $temp = new stdClass();
         $temp->name = 'fulltext_'.$this->_raw;
