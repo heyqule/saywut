@@ -221,4 +221,26 @@ class Post_Collection extends Post_Resource
 
         return count($result);
     }
+
+    public function getPostCountPerInterval($since = '2000-01-01', $type = 'm')
+    {
+        switch($type)
+        {
+            case 'y':
+                $sql = "SELECT DATE_FORMAT(create_time, '%Y') AS date_interval,Count(id) AS count FROM ".POSTS_TBL." WHERE create_time > :create_time GROUP BY date_interval ORDER BY date_interval DESC";
+                break;
+            default:
+                $sql = "SELECT DATE_FORMAT(create_time, '%Y-%m') AS date_interval,Count(id) AS count FROM ".POSTS_TBL." WHERE create_time > :create_time GROUP BY date_interval ORDER BY date_interval DESC";
+                break;
+        }
+
+
+        $sth = $this->db_res->prepare($sql);
+
+        $sth->bindValue(':create_time',$since);
+
+        $sth->execute();
+
+        return $sth->fetchAll();
+    }
 }
