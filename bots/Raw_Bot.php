@@ -67,6 +67,8 @@ class Raw_Bot extends Bot {
                     $post->provider_cid = uniqid();
                 }
 
+                $post->keywords = $value->keywords;
+
                 $post->contents = $value->contents;
 
                 $post->create_time = date(DT_FORMAT, time());
