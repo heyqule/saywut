@@ -14,6 +14,7 @@ class Post_Resource {
     protected $insert_post_stm;
     protected $insert_post_meta_stm;
     protected $insert_post_search_stm;
+    protected $delete_post_meta_stm;
     
     function __construct() {
         $this->db_res = Core::getDBHandle();
@@ -64,6 +65,10 @@ class Post_Resource {
                       ON DUPLICATE KEY UPDATE title = :title, contents = :contents, keywords = :keywords;";
 
             $this->insert_post_search_stm = $this->db_res->prepare($insert_post_search);
+
+            $delete_post_meta = "DELETE FROM  ".META_TBL." WHERE post_id = :post_id and meta_name = :meta_name;";
+
+            $this->delete_post_meta_stm = $this->db_res->prepare($delete_post_meta);
         }
 
         try
@@ -97,19 +102,36 @@ class Post_Resource {
 
             if(!empty($data['meta'])) {
                 foreach($data['meta'] as $key => $value) {
-                    $this->insert_post_meta_stm->execute(
-                        array(
-                            ':id'=>null,
-                            ':post_id'=>$post_id,
-                            ':meta_name'=>$key,
-                            ':meta_value'=>$value
-                        )
-                    );
-
-                    if($this->insert_post_meta_stm->errorCode() != '00000')
+                    if(strlen((string) $value))
                     {
-                        throw new Exception('Meta SQL Upsert Failed @ '.$key);
-                    };
+                        $this->insert_post_meta_stm->execute(
+                            array(
+                                ':id' => null,
+                                ':post_id' => $post_id,
+                                ':meta_name' => $key,
+                                ':meta_value' => $value
+                            )
+                        );
+
+                        if ($this->insert_post_meta_stm->errorCode() != '00000')
+                        {
+                            throw new Exception('Meta SQL Upsert Failed @ ' . $key);
+                        };
+                    }
+                    else
+                    {
+                        $this->delete_post_meta_stm->execute(
+                            array(
+                                ':post_id' => $post_id,
+                                ':meta_name' => $key,
+                            )
+                        );
+
+                        if ($this->delete_post_meta_stm->errorCode() != '00000')
+                        {
+                            throw new Exception('Meta SQL DELETE Failed @ ' . $key);
+                        };
+                    }
                 }
             }
 
@@ -121,9 +143,6 @@ class Post_Resource {
                     ':keywords' => $data['keywords']
                 )
             );
-
-            $lol = $this->insert_post_search_stm->errorCode();
-            $info = $this->insert_post_search_stm->errorInfo();
 
             if($this->insert_post_search_stm->errorCode() != '00000')
             {
@@ -172,16 +191,12 @@ class Post_Resource {
 
     public function reindexAll() {
         $stm = $this->db_res->prepare(
-            'INSERT INTO '.SEARCH_TBL.' SELECT t.id, t.title, t.contents, t.keywords FROM '.POSTS_TBL.' t LEFT JOIN '.SEARCH_TBL.' s on s.id=t.id WHERE s.id is null');
+            'DELETE FROM '.SEARCH_TBL);
 
         $stm->execute();
 
-        $rowCount = $stm->rowCount();
-
         $stm = $this->db_res->prepare(
-            'DELETE FROM '.SEARCH_TBL.' WHERE id = (SELECT s.id FROM '.SEARCH_TBL.' s LEFT JOIN '.POSTS_TBL.' t on t.id=s.id WHERE t.id is null)');
-
-        $rowCount += $stm->rowCount();
+            'INSERT INTO '.SEARCH_TBL.' SELECT t.id, t.title, t.contents, t.keywords FROM '.POSTS_TBL.' t LEFT JOIN '.SEARCH_TBL.' s on s.id=t.id');
 
         $stm->execute();
 

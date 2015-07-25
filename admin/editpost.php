@@ -85,9 +85,7 @@ if(!empty($_POST['contents']))
     $meta_value = $_POST['meta_value'];
 
     foreach($meta_name as $key => $value) {
-        if(!empty($meta_value[$key])) {
-            $currentPost->meta->$meta_name[$key] = $meta_value[$key];
-        }
+        $currentPost->setMeta($value, $meta_value[$key]);
     }
 
 

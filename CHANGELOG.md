@@ -1,5 +1,13 @@
 Version History
 ===============
+0.7
+--------------------
++ Meta tag removal if value is empty
++ Force reindex now repopulate search table.
++ mass_import support (CLI only)
++ Enable keywords support
+* Post Size query fix
+* Change full text from natural language to boolean mode with + for each word
 
 0.6
 -------------------
@@ -10,6 +18,7 @@ Various bug fixes
 0.5
 -----
 Switch back to MySQL
+Removed ACE code editor
 Various changes and fixes
 
 0.4

@@ -106,4 +106,14 @@ class Post
     public function setData($values) {
         $this->data = $values;
     }
+
+    public function getMeta()
+    {
+        return $this->data['meta'];
+    }
+
+    public function setMeta($meta,$value)
+    {
+        return $this->data['meta']->$meta = $value;
+    }
 }
