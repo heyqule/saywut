@@ -14,6 +14,8 @@ if(empty($_SESSION['public_key'])) {
     $_SESSION['public_key'] = uniqid();
 }
 
+header('Cache-Control: max-age=0');
+
 if($_SESSION['public_key'] == $_POST['public_key']
     && PASSWORD == $_POST['password']) {
     $_SESSION['is_logged'] = 1;

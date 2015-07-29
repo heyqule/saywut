@@ -6,12 +6,9 @@
  * Time: 9:46 AM
  * To change this template use File | Settings | File Templates.
  */
-error_reporting(E_ALL | E_STRICT);
-ini_set('display_errors',1);
-
 session_start();
 if(empty($_SESSION['is_logged'])) {
-    die('GTFO');
+    die();
 }
 
 require_once '../config.php';

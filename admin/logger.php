@@ -5,6 +5,10 @@
  * and open the template in the editor.
  */
 
+if(empty($_SESSION['is_logged'])) {
+    die();
+}
+
 require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
 
 Event::cleanup();

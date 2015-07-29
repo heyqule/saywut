@@ -7,6 +7,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
+if(empty($_SESSION['is_logged'])) {
+    die();
+}
+
 require_once ROOT_PATH.DS.'bots'.DS.'Raw_Bot.php';
 
 
