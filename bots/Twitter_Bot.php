@@ -15,16 +15,15 @@ class Twitter_Bot extends Bot {
     protected $qurey_settings;
     
     protected $data;    
-        
-    protected $provider_name;
 
     protected $connection;
     
     public function __construct($id,$config) {
         parent::__construct($id);
         $this->qurey_settings['count'] = 50;
-        $this->qurey_settings['include_rts'] = 1;
+        $this->qurey_settings['include_rts'] = false;
         $this->qurey_settings['include_entities'] = 1;
+        $this->query_settings['exclude_replies'] = true;
         $this->settings['account'] = $config['account'];
         $this->settings['overwrite'] = false;
 
@@ -69,6 +68,24 @@ class Twitter_Bot extends Bot {
                 $targetPost = new Post();
                 $targetPost->loadByProdviderId($this->provider_id, $value->id_str);
                 if(!empty($targetPost->id) && !$this->settings['overwrite']) {
+                    continue;
+                }
+
+                //Skip reply
+                if(!empty($value->in_reply_to_status_id_str))
+                {
+                    continue;
+                }
+
+                //Skip favorited
+                if(!empty($value->favorited))
+                {
+                    continue;
+                }
+
+                //Skip retweet
+                if(!empty($value->retweeted))
+                {
                     continue;
                 }
 
@@ -215,11 +232,11 @@ class Twitter_Bot extends Bot {
                     $lastUnit = $this->data[(sizeof($this->data) - 1)];
                     $newPage = $lastUnit->id_str;
                     $this->qurey_settings['max_id'] = bcsub($newPage, '1');
-                    echo "\n Imported: ".$newPage;
                 }
             } while ($canContinue);
 
             Event::write($this->provider_id, Event::E_SUCCESS, 'Number of Change - ' . $this->numberChanged);
+            echo Core::getBotName($this->provider_id).' imported:'.$this->numberChanged."\n";
         }
         catch(Exception $e)
         {
