@@ -59,9 +59,7 @@ if(!empty($_POST['contents']) &&
     $meta_value = $_POST['meta_value'];
 
     foreach($meta_name as $key => $value) {
-        if(!empty($meta_value[$key])) {
-            $temp->meta->$meta_name[$key] = $meta_value[$key];
-        }
+        $temp->setMeta($value, $meta_value[$key]);
     }
 
 
@@ -122,6 +120,12 @@ if(!empty($_POST['contents']) &&
     <br /><br />
     <button type="submit">Submit</button>
 </form>
+<h3>System Meta</h3>
+<ul>
+    <li>styleclass - apply class to page container</li>
+    <li>sitemap - enable sitemap generation</li>
+    <li>description - meta description</li>
+</ul>
 <script type="text/javascript">
 $('.new_meta').click(function(e) {
     $('.meta_fields').append('<li><div class="col1"><label>Meta Name</label><input type="text" name="meta_name[]" /><br /><button type="button">Delete</button></div><div class="col2"><label>Meta Value</label><textarea name="meta_value[]" /></textarea></div></li>');
