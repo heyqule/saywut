@@ -4,6 +4,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'includes'.DS.'Core.php';
 
 final Class Event {
@@ -75,7 +78,7 @@ final Class Event {
         }
                 
         $arr = array();
-        while ($row = $downstream->fetch(PDO::FETCH_ASSOC)) {
+        while ($row = $downstream->fetch(\PDO::FETCH_ASSOC)) {
             $arr[] = $row;
         }               
         

@@ -21,7 +21,7 @@ if(!empty($_POST['contents']) &&
 )
 {
     $data = array();
-    $temp = new stdClass();
+    $temp = new \stdClass();
     $temp->contents = $_POST['contents'];
     if(!empty($_POST['title']))
     {
@@ -46,12 +46,12 @@ if(!empty($_POST['contents']) &&
 
     if(!empty($GLOBALS['BOT_CONFIG'][$_POST['post_type']]['hidden']))
     {
-        $temp->meta = new stdClass();
+        $temp->meta = new \stdClass();
         $temp->meta->hidden = 1;
     }
     else
     {
-        $temp->meta = new stdClass();
+        $temp->meta = new \stdClass();
         $temp->meta->hidden = 0;
     }
 
@@ -65,10 +65,10 @@ if(!empty($_POST['contents']) &&
 
 
     $data[] = $temp;
-    $bot = new Raw_Bot($_POST['post_type'],$data,true);
+    $bot = new \Saywut\Raw_Bot($_POST['post_type'],$data,true);
     if($bot->getError()) {
         $msg = print_r($bot->getError(),true);
-        Event::write($_POST['post_type'],EVENT::E_ERROR,$msg);
+        \Saywut\Event::write($_POST['post_type'],EVENT::E_ERROR,$msg);
     }
     else
     {

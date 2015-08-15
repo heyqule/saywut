@@ -5,6 +5,8 @@
  * and open the template in the editor.
  */
 
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'includes'.DS.'Core.php';
 require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
 
@@ -90,7 +92,7 @@ class Post_Resource {
 
             if($this->insert_post_stm->errorCode() != '00000')
             {
-                throw new Exception('Main SQL Upsert Failed');
+                throw new \Exception('Main SQL Upsert Failed');
             };
 
             $post_id = $this->db_res->lastInsertId();
@@ -115,7 +117,7 @@ class Post_Resource {
 
                         if ($this->insert_post_meta_stm->errorCode() != '00000')
                         {
-                            throw new Exception('Meta SQL Upsert Failed @ ' . $key);
+                            throw new \Exception('Meta SQL Upsert Failed @ ' . $key);
                         };
                     }
                     else
@@ -129,7 +131,7 @@ class Post_Resource {
 
                         if ($this->delete_post_meta_stm->errorCode() != '00000')
                         {
-                            throw new Exception('Meta SQL DELETE Failed @ ' . $key);
+                            throw new \Exception('Meta SQL DELETE Failed @ ' . $key);
                         };
                     }
                 }
@@ -146,15 +148,15 @@ class Post_Resource {
 
             if($this->insert_post_search_stm->errorCode() != '00000')
             {
-                throw new Exception('Index SQL Failed @');
+                throw new \Exception('Index SQL Failed @');
             };
 
             $this->db_res->commit();
             return $post_id;
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
             $this->db_res->rollBack();
         }
     }    
@@ -173,7 +175,7 @@ class Post_Resource {
         $stm = $this->db_res->prepare('SELECT * FROM '.POSTS_TBL.' WHERE id = :id');
         $stm->execute(array(':id'=>$id));
         
-        $rc_row = $this->_fetchResult($stm->fetch(PDO::FETCH_ASSOC));
+        $rc_row = $this->_fetchResult($stm->fetch(\PDO::FETCH_ASSOC));
         
         return $rc_row;
     } 
@@ -184,7 +186,7 @@ class Post_Resource {
 
         $stm->execute(array(':provider_id'=>$pid,':provider_cid'=>$pcid));
 
-        $rc_row = $this->_fetchResult($stm->fetch(PDO::FETCH_ASSOC));
+        $rc_row = $this->_fetchResult($stm->fetch(\PDO::FETCH_ASSOC));
         
         return $rc_row;        
     }
@@ -209,11 +211,11 @@ class Post_Resource {
         if(!empty($result))
         {
             $rc_row = $result;
-            $meta_result = $this->db_res->query('SELECT * FROM '.META_TBL.' WHERE post_id = '.$rc_row['id'],PDO::FETCH_ASSOC);
+            $meta_result = $this->db_res->query('SELECT * FROM '.META_TBL.' WHERE post_id = '.$rc_row['id'],\PDO::FETCH_ASSOC);
 
             foreach($meta_result as $row) {
                 if(empty($rc_row['meta'])) {
-                    $rc_row['meta'] = new stdClass();
+                    $rc_row['meta'] = new \stdClass();
                 }
                 $rc_row['meta']->$row['meta_name'] = $row['meta_value'];
             }

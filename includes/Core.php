@@ -4,6 +4,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'config.php';
 
 final class Core {        
@@ -13,7 +16,7 @@ final class Core {
     
     public static function getDBHandle() {
         if(static::$db_res == null) {
-            static::$db_res = new PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';',
+            static::$db_res = new \PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';',
                 MYSQL_DB_USER,MYSQL_DB_PASS);
         }        
         return static::$db_res;
@@ -44,7 +47,7 @@ final class Core {
         {
             $stm = static::$db_res->prepare('SELECT * FROM '.BOTS_TBL);
             $stm->execute();
-            $result = $stm->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
             foreach($result as $value) {
                 static::$bot_types[md5($value['class'].$value['name'])] = $value;
             }
@@ -77,7 +80,7 @@ final class Core {
             {
                 libxml_use_internal_errors(true);
 
-                $doc = new DomDocument();
+                $doc = new \DomDocument();
                 $doc->loadHTML($contents);
                 $metas = $doc->getElementsByTagName('meta');
 
@@ -117,14 +120,14 @@ final class Core {
             }
             else
             {
-                throw new Exception('Settings is not an array');
+                throw new \Exception('Settings is not an array');
             }
 
             $curl_handle=curl_init();
 
             if(!isset($settings[CURLOPT_URL]))
             {
-                throw new Exception('URL is missing');
+                throw new \Exception('URL is missing');
             }
 
 
@@ -135,9 +138,9 @@ final class Core {
             curl_close($curl_handle);
             return $buffer;
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
-            throw new Exception($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 }

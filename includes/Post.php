@@ -5,6 +5,8 @@
  * and open the template in the editor.
  */
 
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'includes'.DS.'Post_Resource.php';
 
 class Post 
@@ -21,8 +23,8 @@ class Post
         try {  
             $this->data = $this->resource->load($id);
         }
-        catch(Exception $e) {
-            throw new Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
+        catch(\Exception $e) {
+            throw new \Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
         }            
     }
     
@@ -30,9 +32,9 @@ class Post
         try {
             $this->data = $this->resource->loadByProvider($pid, $pcid);
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
-            throw new Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
+            throw new \Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
         }                
     }
     
@@ -46,7 +48,7 @@ class Post
             );
             return $this->id;
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             Event::write(
                     $this->provider_id,
                     Event::E_ERROR,
@@ -69,8 +71,8 @@ class Post
                 return true;
             }
         }
-        catch(Exception $e) {
-            throw new Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
+        catch(\Exception $e) {
+            throw new \Exception($e->getMessage().' @ '.$e->getLine().' in '.$e->getFile());
         }           
     }
     

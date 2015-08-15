@@ -17,7 +17,7 @@ $msg = '';
 $currentPost = null;
 
 if(!empty($_GET['id'])) {
-    $currentPost = new Post();
+    $currentPost = new \Saywut\Post();
     $currentPost->load($_GET['id']);
 }
 else
@@ -38,7 +38,7 @@ if(!empty($_GET['hidden'])) {
 
     if(empty($currentPost->meta))
     {
-        $currentPost->meta = new stdClass();
+        $currentPost->meta = new \stdClass();
     }
 
     if($_GET['hidden'] == 1)

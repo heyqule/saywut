@@ -37,7 +37,7 @@ if(empty($offset)) {
     $offset = 0;
 }
 
-$post_collector = new Post_Collection();
+$post_collector = new \Saywut\Post_Collection();
 if(!empty($provider))
 {
     $post_collector->addWhere('provider_id','=',$provider)->addRaw('AND');

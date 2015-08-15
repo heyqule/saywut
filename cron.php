@@ -13,6 +13,6 @@ require_once ROOT_PATH.DS.'includes'.DS.'BotRunner.php';
 
 if(php_sapi_name() == 'cli')
 {
-    BotRunner::init($GLOBALS['BOT_CONFIG']);
+    \Saywut\BotRunner::init($GLOBALS['BOT_CONFIG']);
 }
 ?>

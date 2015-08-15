@@ -11,10 +11,10 @@ if(empty($_SESSION['is_logged'])) {
 
 require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
 
-Event::cleanup();
-$arr = Event::read();
+\Saywut\Event::cleanup();
+$arr = \Saywut\Event::read();
 
-Core::getBots();
+\Saywut\Core::getBots();
 
 
 ?>
@@ -25,8 +25,8 @@ Core::getBots();
 foreach($arr as $row):
     echo '<tr>'.
          '<td style="width:10%">'.$row['id'].'</td>'.
-         '<td style="width:10%">'.Core::getBotName($row['bot_id']).'</td>'.
-         '<td style="width:10%">'.Event::getEventType($row['event_type']).'</td>'.
+         '<td style="width:10%">'.\Saywut\Core::getBotName($row['bot_id']).'</td>'.
+         '<td style="width:10%">'.\Saywut\Event::getEventType($row['event_type']).'</td>'.
          '<td style="width:60%">'.$row['message'].'</td>'.
          '<td style="width:10%">'.$row['create_time'].'</td>'.
          '</tr>';

@@ -1,5 +1,10 @@
 Version History
 ===============
+0.8
+--------------------
++ Various bug fix
++ now use \Saywut namespace
+
 0.7
 --------------------
 + Meta tag removal if value is empty

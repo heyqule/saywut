@@ -4,6 +4,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 abstract class Bot {

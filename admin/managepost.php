@@ -14,7 +14,7 @@ if(empty($_SESSION['is_logged'])) {
 require_once ROOT_PATH.DS.'includes'.DS.'Post.php';
 require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
-$collect = new Post_Collection();
+$collect = new \Saywut\Post_Collection();
 
 $limit = 50;
 $offset = 0;

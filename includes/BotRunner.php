@@ -4,6 +4,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+namespace Saywut;
+
 require_once  ROOT_PATH.DS.'includes'.DS.'Core.php';
 
 class BotRunner 
@@ -22,7 +25,8 @@ class BotRunner
 
                 require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
 
-                $bot = new $botInfo['class'](Core::getBotKey($botInfo),$botInfo);
+                $path = '\Saywut\\'.$botInfo['class'];
+                $bot = new $path(Core::getBotKey($botInfo),$botInfo);
                 $bot->run();
             }
        }
@@ -42,7 +46,8 @@ class BotRunner
 
                 require_once ROOT_PATH.DS.'bots'.DS.$config['class'].'.php';
 
-                $bot = new $config['class'](Core::getBotKey($config),$config);
+                $path = '\Saywut\\'.$config['class'];
+                $bot = new $path(Core::getBotKey($config),$config);
                 if(method_exists($bot,'import'))
                 {
                     $bot->import();
@@ -51,7 +56,7 @@ class BotRunner
             }
             elseif($botId)
             {
-                throw new Exception('Invalid Bot Id');
+                throw new \Exception('Invalid Bot Id');
             }
 
 
@@ -66,14 +71,15 @@ class BotRunner
 
                 require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
 
-                $bot = new $botInfo['class'](Core::getBotKey($botInfo),$botInfo);
+                $path = '\Saywut\\'.$config['class'];
+                $bot = new $path(Core::getBotKey($botInfo),$botInfo);
                 if(method_exists($bot,'import'))
                 {
                     $bot->import();
                 }
             }
         }
-        catch(Exception $e)
+        catch(\Exception $e)
         {
             Event::write(0,Event::E_ERROR,$e->getMessage().' @ '.$e->getFile().' L: '.$e->getLine());
         }

@@ -7,6 +7,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'includes'.DS.'Bot.php';
 
 class Raw_Bot extends Bot {
@@ -77,12 +79,12 @@ class Raw_Bot extends Bot {
 
                 if(!empty($value->meta) && isset($value->meta->hidden))
                 {
-                    $post->meta = new stdClass();
+                    $post->meta = new \stdClass();
                     $post->meta->hidden = $value->meta->hidden;
                 }
                 else
                 {
-                    $post->meta = new stdClass();
+                    $post->meta = new \stdClass();
                     $post->meta->hidden = 0;
                 }
 

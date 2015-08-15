@@ -5,6 +5,8 @@
  * and open the template in the editor.
  */
 
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'includes'.DS.'Bot.php';
 require_once ROOT_PATH.DS.'bots'.DS.'libs'.DS.'twitteroauth'.DS.'twitteroauth.php';
 
@@ -34,7 +36,7 @@ class Twitter_Bot extends Bot {
         
         $this->interval = $config['interval'];
 
-        $this->connection = new TwitterOAuth(
+        $this->connection = new \TwitterOAuth(
             $config['consumerKey'],
             $config['consumerSecret'],
             $config['oauthKey'],
@@ -100,7 +102,7 @@ class Twitter_Bot extends Bot {
                 
                 if(!empty($value->entities->media[0]->media_url))
                 {                
-                    $custom_data = new stdClass();
+                    $custom_data = new \stdClass();
 
                     $custom_data->imageUrl = $value->entities->media[0]->media_url;
                 
@@ -110,7 +112,7 @@ class Twitter_Bot extends Bot {
                 {
                     $metas = Core::getMetaTags($value->entities->urls[0]->expanded_url);                    
                     
-                    $custom_data = new stdClass();
+                    $custom_data = new \stdClass();
 
                     $custom_data->extUrl = $value->entities->urls[0]->expanded_url;                                        
                     
@@ -149,38 +151,38 @@ class Twitter_Bot extends Bot {
                     
                     if(!empty($metas['twitter:site']))
                     {
-                        $custom_data->card_holder = $metas['twitter:site'];
+                        $custom_data->card_holder = utf8_decode($metas['twitter:site']);
                     } 
                     elseif(!empty($metas['og:site_name']))
                     {
-                        $custom_data->card_holder = $metas['og:site_name'];
+                        $custom_data->card_holder = utf8_decode($metas['og:site_name']);
                     }
                     
                     if(!empty($metas['twitter:title']))
                     {                    
-                        $custom_data->card_title = $metas['twitter:title'];
+                        $custom_data->card_title = utf8_decode($metas['twitter:title']);
                     }
                     elseif(!empty($metas['og:title'])) 
                     {
-                        $custom_data->card_title = $metas['og:title'];
+                        $custom_data->card_title = utf8_decode($metas['og:title']);
                     }
                     elseif(!empty($metas['title']))
                     {
-                        $custom_data->card_title = $metas['title'];
+                        $custom_data->card_title = utf8_decode($metas['title']);
                     }
 
                     
                     if(!empty($metas['twitter:description']))
                     {                    
-                        $custom_data->card_description = $metas['twitter:description'];
+                        $custom_data->card_description = utf8_decode($metas['twitter:description']);
                     }
                     elseif(!empty($metas['og:description'])) 
                     {
-                        $custom_data->card_description = $metas['og:description'];
+                        $custom_data->card_description = utf8_decode($metas['og:description']);
                     }
                     elseif(!empty($metas['description'])) 
                     {
-                        $custom_data->card_description = $metas['description'];
+                        $custom_data->card_description = utf8_decode($metas['description']);
                     }                    
                                     
                     $post->meta = $custom_data;
@@ -188,7 +190,7 @@ class Twitter_Bot extends Bot {
 
                 if($post->meta == null)
                 {
-                    $post->meta = new stdClass();
+                    $post->meta = new \stdClass();
                 }
                 $post->meta->hidden = 0;
 
@@ -212,7 +214,7 @@ class Twitter_Bot extends Bot {
 
         if($this->error)
         {
-            throw new Exception($this->error);
+            throw new \Exception($this->error);
         }
     }
 

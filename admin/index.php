@@ -46,7 +46,7 @@ try
         require_once ROOT_PATH.DS.'admin'.DS.str_replace('..','',$_GET['l']).'.php';
     }
 }
-catch(Exception $e)
+catch(\Exception $e)
 {
     echo $e->getMessage();
 }

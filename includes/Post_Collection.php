@@ -4,6 +4,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
+namespace Saywut;
+
 require_once ROOT_PATH.DS.'includes'.DS.'Post.php';
 
 class Post_Collection extends Post_Resource
@@ -23,7 +26,7 @@ class Post_Collection extends Post_Resource
     }
 
     function addWhere($name,$op,$value,$name_postfix = '') {
-        $temp = new stdClass();
+        $temp = new \stdClass();
         $temp->name = 'p.'.$name;
         $temp->name_postfix = $name_postfix;
         $temp->op = $op;
@@ -47,7 +50,7 @@ class Post_Collection extends Post_Resource
 
     function addMetaWhere($name,$op,$value,$name_postfix = '') {
         //META NAME
-        $metaname = new stdClass();
+        $metaname = new \stdClass();
         $metaname->name = 'm.meta_name';
         $metaname->name_postfix = '';
         $metaname->op = $op;
@@ -59,7 +62,7 @@ class Post_Collection extends Post_Resource
         $this->addRaw('AND');
 
         //META_VALUE
-        $metavalue = new stdClass();
+        $metavalue = new \stdClass();
         $metavalue->name = 'm.meta_value';
         $metavalue->name_postfix = '';
         $metavalue->op = $op;
@@ -84,7 +87,7 @@ class Post_Collection extends Post_Resource
      * Add Raw Value to sql
      */
     public function addRaw($sqlSegment) {
-        $temp = new stdClass();
+        $temp = new \stdClass();
         $temp->name = 'raw.'.$this->_raw;
         $temp->name_postfix = '';
         $temp->value = $sqlSegment;
@@ -107,7 +110,7 @@ class Post_Collection extends Post_Resource
 
         $query = implode(' ',$words);
 
-        $temp = new stdClass();
+        $temp = new \stdClass();
         $temp->name = 'fulltext_'.$this->_raw;
         $temp->name_postfix = '';
         $temp->value = $query;
@@ -134,15 +137,15 @@ class Post_Collection extends Post_Resource
         $sth = $this->db_res->prepare($sql);
 
         foreach($this->_where as $val) {
-            $sth->bindValue(':'.str_replace('.','',$val->name).$val->name_postfix,$val->value,PDO::PARAM_STR);
+            $sth->bindValue(':'.str_replace('.','',$val->name).$val->name_postfix,$val->value,\PDO::PARAM_STR);
         }
 
-        $sth->bindParam(':offset',$offset,PDO::PARAM_INT);
-        $sth->bindParam(':limit',$limit,PDO::PARAM_INT);
+        $sth->bindParam(':offset',$offset,\PDO::PARAM_INT);
+        $sth->bindParam(':limit',$limit,\PDO::PARAM_INT);
 
         $sth->execute();
         
-        $rows = $sth->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $sth->fetchAll(\PDO::FETCH_ASSOC);
         
         return $this->_fetchRows($rows);                 
     }
@@ -190,12 +193,12 @@ class Post_Collection extends Post_Resource
 
         if(!empty($ids))
         {
-            $result = $this->db_res->query("SELECT * FROM ".META_TBL.' WHERE post_id IN ('.implode(',',$ids).')',PDO::FETCH_ASSOC);
+            $result = $this->db_res->query("SELECT * FROM ".META_TBL.' WHERE post_id IN ('.implode(',',$ids).')',\PDO::FETCH_ASSOC);
 
             foreach($result as $row) {
                 $post = $rc[$row['post_id']];
                 if(empty($post->meta)) {
-                    $post->meta = new stdClass();
+                    $post->meta = new \stdClass();
                 }
                 $post->meta->$row['meta_name'] = $row['meta_value'];
             }
