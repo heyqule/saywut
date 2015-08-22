@@ -84,7 +84,7 @@ $size = $collect->getSize();
                 <a href="#" class="delete" data-id="<?php echo $value->id; ?>">Delete</a>
             </td>
             <td class="col_infos"><?php echo $value->title.'<br />CD: '.$value->create_time.'<br />UD: '.$value->update_time;  ?></td>
-            <td class="col_type"><?php echo Core::getBotName($value->provider_id); ?></td>
+            <td class="col_type"><?php echo \Saywut\Core::getBotName($value->provider_id); ?></td>
             <td class="col_type_cid"><?php echo $value->provider_cid; ?></td>
             <td class="col_content"><?php echo substr(strip_tags($value->contents),0,140); ?></td>
             <td class="col_hidden"><?php echo ($value->meta->hidden) ? 'true' : 'false'; ?></td>
