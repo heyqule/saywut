@@ -7,8 +7,8 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'includes'.DS.'Core.php';
-require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Core.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Event.php';
 
 class Post_Resource {
     protected $db_res;

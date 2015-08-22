@@ -9,8 +9,8 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'includes'.DS.'Bot.php';
-require_once ROOT_PATH.DS.'bots'.DS.'libs'.DS.'phpFlickr'.DS.'phpFlickr.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Bot.php';
+require_once SAYWUT_ROOT_PATH.DS.'bots'.DS.'libs'.DS.'phpFlickr'.DS.'phpFlickr.php';
 
 class Flickr_Bot extends Bot
 {

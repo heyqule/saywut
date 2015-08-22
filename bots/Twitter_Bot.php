@@ -7,8 +7,8 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'includes'.DS.'Bot.php';
-require_once ROOT_PATH.DS.'bots'.DS.'libs'.DS.'twitteroauth'.DS.'twitteroauth.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Bot.php';
+require_once SAYWUT_ROOT_PATH.DS.'bots'.DS.'libs'.DS.'twitteroauth'.DS.'twitteroauth.php';
 
 class Twitter_Bot extends Bot {
     

@@ -11,7 +11,7 @@ ini_set('display_error',1);
 
 
 require_once '../config.php';
-require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 
 try
@@ -42,7 +42,7 @@ define('DB_PATH', 'something.sqlite');
 define('DB_USER','something');
 define('DB_PASS','something');
 
-$sqlite = new PDO('sqlite:'.ROOT_PATH.DS.DB_PATH,DB_USER,DB_PASS);
+$sqlite = new PDO('sqlite:'.SAYWUT_ROOT_PATH.DS.DB_PATH,DB_USER,DB_PASS);
 
 $sth = $sqlite->prepare('SELECT * FROM posts;');
 $sth->execute();

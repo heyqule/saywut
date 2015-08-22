@@ -11,7 +11,7 @@ if(empty($_SESSION['is_logged'])) {
     die();
 }
 
-require_once ROOT_PATH.DS.'bots'.DS.'Raw_Bot.php';
+require_once SAYWUT_ROOT_PATH.DS.'bots'.DS.'Raw_Bot.php';
 
 $msg = '';
 $currentPost = null;

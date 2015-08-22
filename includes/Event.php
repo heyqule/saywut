@@ -7,7 +7,7 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'includes'.DS.'Core.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Core.php';
 
 final Class Event {
     const E_EMERG = 0;

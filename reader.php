@@ -6,7 +6,7 @@
  */
 
 require_once 'config.php';
-require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 //Get all providers
 if(!empty($_REQUEST['providers'])) {

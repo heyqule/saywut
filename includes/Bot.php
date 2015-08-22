@@ -7,7 +7,7 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Post_Collection.php';
 
 abstract class Bot {
 

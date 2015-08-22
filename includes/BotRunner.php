@@ -7,7 +7,7 @@
 
 namespace Saywut;
 
-require_once  ROOT_PATH.DS.'includes'.DS.'Core.php';
+require_once  SAYWUT_ROOT_PATH.DS.'includes'.DS.'Core.php';
 
 class BotRunner 
 {
@@ -23,7 +23,7 @@ class BotRunner
                     continue;
                 }
 
-                require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
+                require_once SAYWUT_ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
 
                 $path = '\Saywut\\'.$botInfo['class'];
                 $bot = new $path(Core::getBotKey($botInfo),$botInfo);
@@ -44,7 +44,7 @@ class BotRunner
             {
                 $config = $botConfig[$botId];
 
-                require_once ROOT_PATH.DS.'bots'.DS.$config['class'].'.php';
+                require_once SAYWUT_ROOT_PATH.DS.'bots'.DS.$config['class'].'.php';
 
                 $path = '\Saywut\\'.$config['class'];
                 $bot = new $path(Core::getBotKey($config),$config);
@@ -69,7 +69,7 @@ class BotRunner
                     continue;
                 }
 
-                require_once ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
+                require_once SAYWUT_ROOT_PATH.DS.'bots'.DS.$botInfo['class'].'.php';
 
                 $path = '\Saywut\\'.$config['class'];
                 $bot = new $path(Core::getBotKey($botInfo),$botInfo);

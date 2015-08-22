@@ -9,7 +9,7 @@ if(empty($_SESSION['is_logged'])) {
     die();
 }
 
-require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Event.php';
 
 \Saywut\Event::cleanup();
 $arr = \Saywut\Event::read();

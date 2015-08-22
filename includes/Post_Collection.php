@@ -7,7 +7,7 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'includes'.DS.'Post.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Post.php';
 
 class Post_Collection extends Post_Resource
 {

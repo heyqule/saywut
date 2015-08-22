@@ -7,7 +7,7 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'config.php';
+require_once SAYWUT_ROOT_PATH.DS.'config.php';
 
 final class Core {        
     

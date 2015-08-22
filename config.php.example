@@ -6,7 +6,7 @@
  */
 
 define('DS',DIRECTORY_SEPARATOR);
-define('ROOT_PATH',__DIR__);
+define('SAYWUT_ROOT_PATH',__DIR__);
 
 define('MYSQL_DB_HOST', 'localhost');
 define('MYSQL_DB_PORT', '3306');

@@ -9,7 +9,7 @@
 
 namespace Saywut;
 
-require_once ROOT_PATH.DS.'includes'.DS.'Bot.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Bot.php';
 
 class Raw_Bot extends Bot {
 

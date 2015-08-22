@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 require_once '../config.php';
-require_once ROOT_PATH.DS.'includes'.DS.'Event.php';
+require_once SAYWUT_ROOT_PATH.DS.'includes'.DS.'Event.php';
 
 session_start();
 header('Cache-Control: max-age=0');
@@ -43,7 +43,7 @@ try
 {
     if(!empty($_GET['l']))
     {
-        require_once ROOT_PATH.DS.'admin'.DS.str_replace('..','',$_GET['l']).'.php';
+        require_once SAYWUT_ROOT_PATH.DS.'admin'.DS.str_replace('..','',$_GET['l']).'.php';
     }
 }
 catch(\Exception $e)
