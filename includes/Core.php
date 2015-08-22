@@ -16,7 +16,7 @@ final class Core {
     
     public static function getDBHandle() {
         if(static::$db_res == null) {
-            static::$db_res = new \PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';',
+            static::$db_res = new \PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';charset=utf8',
                 MYSQL_DB_USER,MYSQL_DB_PASS);
         }        
         return static::$db_res;
