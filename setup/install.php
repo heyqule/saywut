@@ -5,10 +5,11 @@ ini_set('display_error',1);
 
 require_once '../config.php';
 
+echo 'Initializing DB... <br />';
+$mysql = new PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';',MYSQL_DB_USER,MYSQL_DB_PASS);
+
 try
 {
-    echo 'Initializing DB... <br />';
-    $mysql = new PDO('mysql:host='.MYSQL_DB_HOST.';port='.MYSQL_DB_PORT.';dbname='.MYSQL_DB_NAME.';',MYSQL_DB_USER,MYSQL_DB_PASS);
 
     $mysql->beginTransaction();
 
