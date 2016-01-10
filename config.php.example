@@ -7,6 +7,8 @@
 
 define('DS',DIRECTORY_SEPARATOR);
 define('SAYWUT_ROOT_PATH',__DIR__);
+define('SAYWUT_SERVER_ROOT',$_SERVER["DOCUMENT_ROOT"]);
+
 
 define('MYSQL_DB_HOST', 'localhost');
 define('MYSQL_DB_PORT', '3306');
