@@ -2,17 +2,15 @@ WTF is saywut bot?
 ==================
 A collection of bots which archive posts from various sources, e.g twitter, to a central db.
 
+**Current Version**: 1.0
 **DEMO**: <http://www.heyqule.com>
 
 Usage
 -----
-1. set up includes/config.php
+1. set up config.php
 2. run install.php
 3. set up a cron job to run cron.php to get posts
 4. use read.php to read posts as json.
-
-## Reader.php Query Strings
-+ offset=0 - page indicator
 
 Add new bot
 -----------

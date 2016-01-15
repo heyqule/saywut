@@ -1,5 +1,9 @@
 Version History
 ===============
+1.0
+--------------------
+nothing change... just time for a version bump ¯\_(ツ)_/¯
+
 0.8
 --------------------
 + Various bug fix
