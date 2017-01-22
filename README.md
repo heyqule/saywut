@@ -4,7 +4,7 @@ A collection of bots which archive posts from various sources, e.g twitter, to a
 
 **Current Version**: 1.0
 
-**DEMO**: <http://www.heyqule.com>
+**DEMO**: <http://www.heyqule.net>
 
 Usage
 -----

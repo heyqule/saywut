@@ -19,6 +19,8 @@ class Twitter_Bot extends Bot {
     protected $data;    
 
     protected $connection;
+
+    protected $httpProc = array('https:','http:');
     
     public function __construct($id,$config) {
         parent::__construct($id);
@@ -140,11 +142,11 @@ class Twitter_Bot extends Bot {
                         
                         if(!empty($image_url) && strpos($image_url,'://') === false) {
                             $domain = parse_url($custom_data->extUrl);
-                            $custom_data->card_photo_url = $domain['scheme'].'://'.$domain['host'].'/'.$image_url;
+                            $custom_data->card_photo_url = '//'.$domain['host'].'/'.$image_url;
                         }
                         elseif(!empty($image_url))
                         {
-                            $custom_data->card_photo_url = $image_url;
+                            $custom_data->card_photo_url = str_replace($this->httpProc,'',$image_url);
                         }
                     }
                     
